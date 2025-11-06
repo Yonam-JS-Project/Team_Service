@@ -27,6 +27,10 @@ jobs:
 
       - name: Deploy via Docker Compose
         run: |
+          if [ -z "${{ secrets.SERVER_USER }}" ] || [ -z "${{ secrets.SERVER_HOST }}" ] || [ -z "${{ secrets.DEPLOY_PATH }}" ]; then
+            echo "ERROR: One of the required secrets is empty!"
+            exit 1
+          fi
           ssh -i ~/.ssh/id_ed25519 ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
             cd ${{ secrets.DEPLOY_PATH }}
             docker-compose down
