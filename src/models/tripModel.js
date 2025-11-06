@@ -70,9 +70,10 @@ const tripModel = {
     },
 
     update: async (shareCode, updates) => {
-        const { tripName, destination, startDate, endDate } = updates;
-        const query = `
-            UPDATE trips 
+        const { tripName, destination, startDate, endDate, dailySchedules } = updates;
+
+        const tripQuery = `
+            UPDATE trips
             SET trip_name = COALESCE($1, trip_name),
                 destination = COALESCE($2, destination),
                 start_date = COALESCE($3, start_date),
@@ -80,8 +81,32 @@ const tripModel = {
             WHERE share_code = $5
             RETURNING *
         `;
-        const result = await pool.query(query, [tripName, destination, startDate, endDate, shareCode]);
-        return result.rows[0];
+        const tripResult = await pool.query(tripQuery, [tripName, destination, startDate, endDate, shareCode]);
+        const tripId = tripResult.rows[0].trip_id;
+
+        await pool.query('DELETE FROM places WHERE schedule_id IN (SELECT schedule_id FROM daily_schedules WHERE trip_id = $1)', [tripId]);
+        await pool.query('DELETE FROM daily_schedules WHERE trip_id = $1', [tripId]);
+
+        for (let i = 0; i < dailySchedules.length; i++) {
+            const day = dailySchedules[i];
+            const dsResult = await pool.query(
+                `INSERT INTO daily_schedules (trip_id, schedule_date, day_number, notes)
+                VALUES ($1, $2, $3, $4) RETURNING schedule_id`,
+                [tripId, day.schedule_date, i + 1, day.notes]
+            );
+            const scheduleId = dsResult.rows[0].schedule_id;
+
+            for (let j = 0; j < day.places.length; j++) {
+                const place = day.places[j];
+                await pool.query(
+                    `INSERT INTO places (schedule_id, place_name, visit_time, duration_minutes, order_index)
+                    VALUES ($1, $2, $3, $4, $5)`,
+                    [scheduleId, place.place_name, place.visit_time, place.duration_minutes, j + 1]
+                );
+            }
+        }
+
+        return tripResult.rows[0];
     },
     delete: async (shareCode) => {
         const query = 'DELETE FROM trips WHERE share_code = $1 RETURNING *';
