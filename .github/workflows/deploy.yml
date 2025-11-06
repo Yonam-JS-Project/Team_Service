@@ -18,22 +18,32 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
+          chmod 700 ~/.ssh
           ssh-keyscan -H "${{ secrets.SERVER_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Verify SSH connection
+        run: |
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
+            "echo 'SSH connection successful'"
 
       - name: Upload files to server
         run: |
-          rsync -avz -e "ssh -i ~/.ssh/id_ed25519" ./ \
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='node_modules' \
+            ./ \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.DEPLOY_PATH }}
 
       - name: Deploy via Docker Compose
         run: |
-          echo "SERVER_USER: ${{ secrets.SERVER_USER }}"
-          echo "SERVER_HOST: ${{ secrets.SERVER_HOST }}"
-          echo "DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}"
-          
-          ssh -i ~/.ssh/id_ed25519 ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
             cd ${{ secrets.DEPLOY_PATH }}
             docker-compose down
             docker-compose build --no-cache
             docker-compose up -d
-          EOF
+            docker-compose ps
+          ENDSSH
