@@ -13,37 +13,61 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Setup SSH
+      - name: Debug - Check secret
+        run: |
+          echo "Checking if DEPLOY_KEY exists..."
+          if [ -z "${{ secrets.DEPLOY_KEY }}" ]; then
+            echo "ERROR: DEPLOY_KEY is empty!"
+            exit 1
+          fi
+          echo "DEPLOY_KEY length: $(echo '${{ secrets.DEPLOY_KEY }}' | wc -c)"
+          echo "First line: $(echo '${{ secrets.DEPLOY_KEY }}' | head -n1)"
+          echo "Last line: $(echo '${{ secrets.DEPLOY_KEY }}' | tail -n1)"
+
+      - name: Setup SSH with ssh-agent
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          chmod 700 ~/.ssh
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          
+          # 키를 임시 파일로 저장
+          echo "${{ secrets.DEPLOY_KEY }}" | tr -d '\r' > /tmp/deploy_key
+          chmod 600 /tmp/deploy_key
+          
+          # 키 형식 검증
+          echo "Validating key format..."
+          ssh-keygen -l -f /tmp/deploy_key
+          
+          # ssh-agent에 추가
+          ssh-add /tmp/deploy_key
+          rm /tmp/deploy_key
+          
+          # known_hosts 추가
           ssh-keyscan -H "${{ secrets.SERVER_HOST }}" >> ~/.ssh/known_hosts
 
       - name: Verify SSH connection
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
-          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no \
+          ssh -v -o StrictHostKeyChecking=no \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
             "echo 'SSH connection successful'"
 
       - name: Upload files to server
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
           rsync -avz --delete \
-            -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" \
+            -e "ssh -o StrictHostKeyChecking=no" \
             --exclude='.git' \
             --exclude='.github' \
             --exclude='node_modules' \
+            --exclude='.env' \
             ./ \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.DEPLOY_PATH }}
 
       - name: Deploy via Docker Compose
-        run: |
-          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no \
-            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
-            cd ${{ secrets.DEPLOY_PATH }}
-            docker-compose down
-            docker-compose build --no-cache
-            docker-compose up -d
-            docker-compose ps
-          ENDSSH
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run:
