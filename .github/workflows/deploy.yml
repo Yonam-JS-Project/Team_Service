@@ -13,17 +13,6 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Debug - Check secret
-        run: |
-          echo "Checking if DEPLOY_KEY exists..."
-          if [ -z "${{ secrets.DEPLOY_KEY }}" ]; then
-            echo "ERROR: DEPLOY_KEY is empty!"
-            exit 1
-          fi
-          echo "DEPLOY_KEY length: $(echo '${{ secrets.DEPLOY_KEY }}' | wc -c)"
-          echo "First line: $(echo '${{ secrets.DEPLOY_KEY }}' | head -n1)"
-          echo "Last line: $(echo '${{ secrets.DEPLOY_KEY }}' | tail -n1)"
-
       - name: Setup SSH with ssh-agent
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
@@ -35,22 +24,23 @@ jobs:
           echo "${{ secrets.DEPLOY_KEY }}" | tr -d '\r' > /tmp/deploy_key
           chmod 600 /tmp/deploy_key
           
-          # 키 형식 검증
-          echo "Validating key format..."
-          ssh-keygen -l -f /tmp/deploy_key
-          
           # ssh-agent에 추가
+          echo "Adding key to ssh-agent..."
           ssh-add /tmp/deploy_key
+          
+          # 키 삭제
           rm /tmp/deploy_key
           
           # known_hosts 추가
           ssh-keyscan -H "${{ secrets.SERVER_HOST }}" >> ~/.ssh/known_hosts
+          
+          echo "SSH setup completed successfully"
 
       - name: Verify SSH connection
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
-          ssh -v -o StrictHostKeyChecking=no \
+          ssh -o StrictHostKeyChecking=no \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
             "echo 'SSH connection successful'"
 
@@ -70,4 +60,12 @@ jobs:
       - name: Deploy via Docker Compose
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-        run:
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
+            cd ${{ secrets.DEPLOY_PATH }}
+            docker-compose down
+            docker-compose build --no-cache
+            docker-compose up -d
+            docker-compose ps
+          ENDSSH
