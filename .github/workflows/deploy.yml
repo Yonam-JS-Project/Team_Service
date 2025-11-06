@@ -20,8 +20,8 @@ jobs:
           mkdir -p ~/.ssh
           ssh-agent -a $SSH_AUTH_SOCK > /dev/null
           
-          # 키를 임시 파일로 저장
-          echo "${{ secrets.DEPLOY_KEY }}" | tr -d '\r' > /tmp/deploy_key
+          # base64 디코딩하여 키 파일 생성
+          echo "${{ secrets.DEPLOY_KEY }}" | base64 -d > /tmp/deploy_key
           chmod 600 /tmp/deploy_key
           
           # ssh-agent에 추가
