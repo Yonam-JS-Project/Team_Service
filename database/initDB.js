@@ -24,13 +24,6 @@ async function initDatabase() {
         await client.query('COMMIT');
         
         console.log('✅ 데이터베이스 초기화 완료!');
-        console.log('📊 생성된 테이블:');
-        console.log('   - trips (여행 일정)');
-        console.log('   - daily_schedules (일자별 일정)');
-        console.log('   - places (장소)');
-        console.log('   - checklists (체크리스트)');
-        console.log('   - map_memos (지도 메모)');
-        console.log('   - app_links (앱 링크)');
         
     } catch (error) {
         // 롤백
