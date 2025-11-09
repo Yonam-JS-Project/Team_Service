@@ -1,26 +1,33 @@
-const success = (data, message = 'Success', meta = {}) => {
-    return {
+// 성공 응답
+const success = (res, data, message = 'Success', meta = {}, statusCode = 200) => {
+    return res.status(statusCode).json({
         status: 'success',
         message,
         data,
-        meta, 
+        meta,
         timestamp: new Date().toISOString()
-    };
+    });
 };
 
-const error = (message = 'Error', code = 500, details = null) => {
-    return {
+// 오류 응답
+const error = (res, message = 'Error', code = 500, details = null) => {
+    return res.status(code).json({
         status: 'error',
         message,
         code,
-        details, 
+        details,
         timestamp: new Date().toISOString()
-    };
+    });
 };
 
-const notFound = (message = 'Resource not found') => error(message, 404);
-const badRequest = (message = 'Bad request', details = null) => error(message, 400, details);
-const unauthorized = (message = 'Unauthorized') => error(message, 401);
+// 404 Not Found
+const notFound = (res, message = 'Resource not found') => error(res, message, 404);
+
+// 400 Bad Request
+const badRequest = (res, message = 'Bad request', details = null) => error(res, message, 400, details);
+
+// 401 Unauthorized
+const unauthorized = (res, message = 'Unauthorized') => error(res, message, 401);
 
 module.exports = {
     success,
@@ -29,3 +36,4 @@ module.exports = {
     badRequest,
     unauthorized
 };
+ 
