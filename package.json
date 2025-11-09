@@ -15,7 +15,7 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "npm run db:init && node index.js",
     "dev": "nodemon index.js",
     "db:init": "node database/initDB.js"
   },

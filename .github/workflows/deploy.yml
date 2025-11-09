@@ -60,9 +60,11 @@ jobs:
       - name: Deploy via Docker Compose
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
           ssh -o StrictHostKeyChecking=no \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
+            export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
             cd ${{ secrets.DEPLOY_PATH }}
             docker-compose down
             docker-compose build --no-cache

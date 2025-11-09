@@ -1,0 +1,241 @@
+{
+	"info": {
+		"_postman_id": "YOUR_POSTMAN_COLLECTION_ID",
+		"name": "Trip Planner API Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_collection_id": "YOUR_COLLECTION_ID"
+	},
+	"item": [
+		{
+			"name": "Trips",
+			"item": [
+				{
+					"name": "Create Trip",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tripName\": \"제주도 가족 여행\",\n    \"startDate\": \"2025-12-01\",\n    \"endDate\": \"2025-12-05\",\n    \"dailySchedules\": [\n        {\n            \"schedule_date\": \"2025-12-01\",\n            \"places\": [\n                {\n                    \"place_name\": \"제주 국제공항\",\n                    \"address\": \"제주 제주시 공항로 2\",\n                    \"latitude\": 33.5113,\n                    \"longitude\": 126.4927,\n                    \"visit_time\": \"10:00\",\n                    \"order_index\": 1,\n                    \"is_completed\": false,\n                    \"memo\": \"렌터카 수령\"\n                },\n                {\n                    \"place_name\": \"동문시장\",\n                    \"address\": \"제주 제주시 동문로 16\",\n                    \"latitude\": 33.5141,\n                    \"longitude\": 126.5283,\n                    \"visit_time\": \"12:00\",\n                    \"order_index\": 2,\n                    \"is_completed\": false,\n                    \"memo\": \"점심 식사 및 구경\"\n                }\n            ]\n        },\n        {\n            \"schedule_date\": \"2025-12-02\",\n            \"places\": [\n                {\n                    \"place_name\": \"성산일출봉\",\n                    \"address\": \"제주 서귀포시 성산읍 일출로 284-12\",\n                    \"latitude\": 33.4587,\n                    \"longitude\": 126.9417,\n                    \"visit_time\": \"09:00\",\n                    \"order_index\": 1,\n                    \"is_completed\": false,\n                    \"memo\": \"일출 감상\"\n                }\n            ]\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/trips",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"trips"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Trip Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/trips/:shareCode",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"trips",
+								":shareCode"
+							],
+							"variable": [
+								{
+									"key": "shareCode",
+									"value": "YOUR_SHARE_CODE",
+									"description": "Replace with an actual share code from a created trip"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Trip Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/trips/:shareCode/details",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"trips",
+								":shareCode",
+								"details"
+							],
+							"variable": [
+								{
+									"key": "shareCode",
+									"value": "YOUR_SHARE_CODE",
+									"description": "Replace with an actual share code from a created trip"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Trip",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tripName\": \"제주도 가족 여행 (수정됨)\",\n    \"startDate\": \"2025-12-01\",\n    \"endDate\": \"2025-12-06\",\n    \"dailySchedules\": [\n        {\n            \"schedule_date\": \"2025-12-01\",\n            \"places\": [\n                {\n                    \"place_name\": \"제주 국제공항\",\n                    \"address\": \"제주 제주시 공항로 2\",\n                    \"latitude\": 33.5113,\n                    \"longitude\": 126.4927,\n                    \"visit_time\": \"10:00\",\n                    \"order_index\": 1,\n                    \"is_completed\": true,\n                    \"memo\": \"렌터카 수령 및 출발\"\n                }\n            ]\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/trips/:shareCode",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"trips",
+								":shareCode"
+							],
+							"variable": [
+								{
+									"key": "shareCode",
+									"value": "YOUR_SHARE_CODE",
+									"description": "Replace with an actual share code from a created trip"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Trip",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/trips/:shareCode",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"trips",
+								":shareCode"
+							],
+							"variable": [
+								{
+									"key": "shareCode",
+									"value": "YOUR_SHARE_CODE",
+									"description": "Replace with an actual share code from a created trip"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Checklist",
+			"item": [
+				{
+					"name": "Toggle Checklist Item (Place)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/checklist/:placeId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"checklist",
+								":placeId"
+							],
+							"variable": [
+								{
+									"key": "placeId",
+									"value": "YOUR_PLACE_ID",
+									"description": "Replace with an actual place ID from a trip"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Memo",
+			"item": [
+				{
+					"name": "Update Memo (Place)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"memo\": \"새로운 메모 내용입니다.\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/memos/:placeId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"memos",
+								":placeId"
+							],
+							"variable": [
+								{
+									"key": "placeId",
+									"value": "YOUR_PLACE_ID",
+									"description": "Replace with an actual place ID from a trip"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
