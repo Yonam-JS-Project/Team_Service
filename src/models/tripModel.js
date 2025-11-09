@@ -83,6 +83,34 @@ const tripModel = {
         return result.rows[0];
     },
 
+    findForEdit: async (shareCode) => {
+        const trip = await tripModel.findByShareCode(shareCode);
+        
+        if (!trip) {
+            return null;
+        }
+
+        // PUT 요청 형식으로 변환
+        return {
+            tripName: trip.trip_name,
+            startDate: trip.start_date.toISOString().split('T')[0],
+            endDate: trip.end_date.toISOString().split('T')[0],
+            dailySchedules: (trip.daily_schedules || []).map(schedule => ({
+                schedule_date: schedule.schedule_date,
+                places: (schedule.places || []).map(place => ({
+                    place_name: place.place_name,
+                    address: place.address,
+                    latitude: place.latitude,
+                    longitude: place.longitude,
+                    visit_time: place.visit_time ? place.visit_time.substring(0, 5) : null,
+                    order_index: place.order_index,
+                    is_completed: place.is_completed,
+                    memo: place.memo || ''
+                }))
+            }))
+        };
+    },
+
     // 여행 전체 수정 (PUT)
     update: async (shareCode, updates) => {
         const { tripName, startDate, endDate, dailySchedules } = updates;

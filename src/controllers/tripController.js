@@ -48,6 +48,21 @@ exports.getTripByShareCode = async (req, res) => {
     }
 };
 
+// 수정용 데이터 조회
+exports.getTripForEdit = async (req, res) => {
+    const { shareCode } = req.params;
+    try {
+        const editData = await tripModel.findForEdit(shareCode);
+        if (!editData) {
+            return responseFormatter.error(res, '여행을 찾을 수 없습니다.', 404);
+        }
+        responseFormatter.success(res, editData, '수정용 데이터 조회 성공');
+    } catch (err) {
+        console.error('Get Trip For Edit Error:', err);
+        responseFormatter.error(res, '서버 오류', 500);
+    }
+};
+
 // 여행 수정
 exports.updateTrip = async (req, res) => {
     const { shareCode } = req.params;
