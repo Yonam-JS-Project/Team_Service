@@ -26,8 +26,6 @@ exports.createTrip = async (req, res) => {
 
         responseFormatter.success(res, trip, '여행 생성 성공', 201);
     } catch (err) {
-        console.error('Create Trip Error:', err);
-
         responseFormatter.error(res, '서버 오류', 500);
     }
 };
@@ -42,7 +40,6 @@ exports.getTripByShareCode = async (req, res) => {
         }
         responseFormatter.success(res, trip, '여행 조회 성공');
     } catch (err) {
-        console.error('Get Trip Error:', err);
         responseFormatter.error(res, '서버 오류', 500);
     }
 };
@@ -57,7 +54,6 @@ exports.getTripForEdit = async (req, res) => {
         }
         responseFormatter.success(res, editData, '수정용 데이터 조회 성공');
     } catch (err) {
-        console.error('Get Trip For Edit Error:', err);
         responseFormatter.error(res, '서버 오류', 500);
     }
 };
@@ -72,7 +68,6 @@ exports.updateTrip = async (req, res) => {
         }
         responseFormatter.success(res, updatedTrip, '여행 수정 성공');
     } catch (err) {
-        console.error('Update Trip Error:', err);
         responseFormatter.error(res, '서버 오류', 500);
     }
 };
@@ -87,7 +82,6 @@ exports.deleteTrip = async (req, res) => {
         }
         responseFormatter.success(res, deletedTrip, '여행 삭제 성공');
     } catch (err) {
-        console.error('Delete Trip Error:', err);
         responseFormatter.error(res, '서버 오류', 500);
     }
 };
@@ -102,7 +96,6 @@ exports.getDetailedInfo = async (req, res) => {
         }
         responseFormatter.success(res, detail, '여행 상세 조회 성공');
     } catch (err) {
-        console.error('Get Detailed Info Error:', err);
         responseFormatter.error(res, '서버 오류', 500);
     }
 };
