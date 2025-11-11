@@ -5,29 +5,28 @@ const crypto = require('crypto');
 // 여행 생성
 exports.createTrip = async (req, res) => {
     try {
-        // 1. share_code 생성
-        const shareCode = crypto.randomBytes(4).toString('hex').toUpperCase();
+        let trip = null;
 
-        // 2. 요청 데이터에 share_code 추가
-        const tripData = {
-            ...req.body,
-            share_code: shareCode,
-        };
+        while (!trip) {
+            try {
+                const share_code = crypto.randomBytes(4).toString('hex').toUpperCase();
+                
+                const tripData = {
+                    ...req.body,
+                    share_code,
+                };
 
-        // 3. 데이터베이스에 여행 정보 저장
-        const trip = await tripModel.create(tripData);
+                trip = await tripModel.create(tripData);
+            } catch (err) {
+                if (err.code === "23505" && err.constraint === "trips_share_code_key") {
+                    return responseFormatter.error(res, '코드 생성 실패, 다시 시도해주세요.', 500);
+                }
+            }
+        }
 
-        // 4. 성공 응답
         responseFormatter.success(res, trip, '여행 생성 성공', 201);
     } catch (err) {
         console.error('Create Trip Error:', err);
-
-        // 5. 오류 처리 (예: 중복된 share_code)
-        if (err.code === '23505' && err.constraint === 'trips_share_code_key') {
-            // share_code가 중복될 경우, 새로운 코드로 다시 시도할 수 있습니다.
-            // 이 예제에서는 간단하게 클라이언트에게 재시도를 요청합니다.
-            return responseFormatter.error(res, '코드 생성 실패, 다시 시도해주세요.', 500);
-        }
 
         responseFormatter.error(res, '서버 오류', 500);
     }
