@@ -6,7 +6,7 @@ const crypto = require('crypto');
 exports.createTrip = async (req, res) => {
     try {
         // 1. share_code 생성
-        const shareCode = crypto.randomBytes(4).toString('hex');
+        const shareCode = crypto.randomBytes(4).toString('hex').toUpperCase();
 
         // 2. 요청 데이터에 share_code 추가
         const tripData = {
