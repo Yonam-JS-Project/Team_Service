@@ -22,9 +22,9 @@ app.get("/", (req, res) => {
   res.send("Hello, World!");
 });
 
-// app.get('/swagger.json', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'swagger', 'swagger.json'));
-// });
+app.get('/swagger.json', (req, res) => {
+  res.sendFile(path.join(__dirname, 'swagger', 'swagger.json'));
+});
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
   explorer: true,
