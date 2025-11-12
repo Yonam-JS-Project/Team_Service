@@ -20,11 +20,15 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Hello, World!");
 });
-app.use('/swagger', express.static(path.join(__dirname, 'swagger')));
-// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+app.get('/swagger.json', (req, res) => {
+  res.sendFile(path.join(__dirname, 'swagger', 'swagger.json'));
+});
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null, {
-  swaggerUrl: '/swagger/swagger.json'
+  swaggerUrl: '/swagger.json'
 }));
+
 app.use('/api', mainRouter);
 
 app.listen(port, () => {
