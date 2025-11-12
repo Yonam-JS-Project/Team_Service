@@ -6,6 +6,8 @@ const mainRouter = require('./src/routes');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger/swagger.json');
 
+swaggerDocument.servers.url = process.env.SERVER_HOST  || 'http://localhost:3000/api';
+
 // uploads/img 폴더를 /img URL 경로로 접근할 수 있도록 설정
 app.use('/img', express.static('uploads/img'));
 
