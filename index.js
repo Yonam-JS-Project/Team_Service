@@ -4,6 +4,9 @@ const app = express()
 const port = 3000
 const mainRouter = require('./src/routes');
 
+// uploads/img 폴더를 /img URL 경로로 접근할 수 있도록 설정
+app.use('/img', express.static('uploads/img'));
+
 app.use(express.json());
 
 app.get("/", (req, res) => {
