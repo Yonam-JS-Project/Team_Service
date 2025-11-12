@@ -31,7 +31,7 @@ const albumModel = {
             RETURNING *;
         `;
         const result = await pool.query(query, [shareCode, photoUrl]);
-        return result.rows[0];
+        return result.rows[0] || null;
     },
 
     // 특정 여행의 앨범 이미지 조회
@@ -41,15 +41,12 @@ const albumModel = {
                 p.photo_id,
                 p.photo_url,
                 p.created_at,
-                pl.place_name,
                 t.trip_name,
                 t.share_code
             FROM
                 trips t
             JOIN
                 photos p ON t.trip_id = p.trip_id
-            LEFT JOIN
-                places pl ON p.place_id = pl.place_id
             WHERE
                 t.share_code = $1
             ORDER BY

@@ -1,5 +1,5 @@
-const tripModel = require('../models/tripModel');
-const responseFormatter = require('../utils/responseFormatter');
+const tripModel = require('../src/models/tripModel');
+const responseFormatter = require('../src/utils/responseFormatter');
 
 function applyShareCodeValidation(router) {
     router.param('shareCode', async (req, res, next, shareCode) => {
