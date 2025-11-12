@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const applyShareCodeValidation = require('../middlewares/shareCodeValidator');
+const applyShareCodeValidation = require('../../middlewares/shareCodeValidator');
 const tripRoutes = require('./tripRoutes');
 const checklistRoutes = require('./checklistRoutes');
 const albumRoutes = require('./albumRoutes');
