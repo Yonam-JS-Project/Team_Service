@@ -196,24 +196,15 @@
 			]
 		},
 		{
-			"name": "Memo",
+			"name": "Album",
 			"item": [
 				{
-					"name": "Update Memo (Place)",
+					"name": "Get All Public Images",
 					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"memo\": \"새로운 메모 내용입니다.\"\n}"
-						},
+						"method": "GET",
+						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/memos/:placeId",
+							"raw": "http://localhost:3000/api/album",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -221,14 +212,97 @@
 							"port": "3000",
 							"path": [
 								"api",
-								"memos",
-								":placeId"
+								"album"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Album Images",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/album/:shareCode",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"album",
+								":shareCode"
 							],
 							"variable": [
 								{
-									"key": "placeId",
-									"value": "YOUR_PLACE_ID",
-									"description": "Replace with an actual place ID from a trip"
+									"key": "shareCode",
+									"value": "YOUR_SHARE_CODE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Album Images",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "albumImages",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/album/:shareCode",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"album",
+								":shareCode"
+							],
+							"variable": [
+								{
+									"key": "shareCode",
+									"value": "YOUR_SHARE_CODE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Album Image",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/album/:imageId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"album",
+								":imageId"
+							],
+							"variable": [
+								{
+									"key": "imageId",
+									"value": "YOUR_IMAGE_ID"
 								}
 							]
 						}

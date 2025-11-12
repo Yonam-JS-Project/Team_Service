@@ -5,30 +5,27 @@ const crypto = require('crypto');
 // 여행 생성
 exports.createTrip = async (req, res) => {
     try {
-        // 1. share_code 생성
-        const shareCode = crypto.randomBytes(4).toString('hex');
+        let trip = null;
 
-        // 2. 요청 데이터에 share_code 추가
-        const tripData = {
-            ...req.body,
-            share_code: shareCode,
-        };
+        while (!trip) {
+            try {
+                const share_code = crypto.randomBytes(4).toString('hex').toUpperCase();
+                
+                const tripData = {
+                    ...req.body,
+                    share_code,
+                };
 
-        // 3. 데이터베이스에 여행 정보 저장
-        const trip = await tripModel.create(tripData);
-
-        // 4. 성공 응답
-        responseFormatter.success(res, trip, '여행 생성 성공', 201);
-    } catch (err) {
-        console.error('Create Trip Error:', err);
-
-        // 5. 오류 처리 (예: 중복된 share_code)
-        if (err.code === '23505' && err.constraint === 'trips_share_code_key') {
-            // share_code가 중복될 경우, 새로운 코드로 다시 시도할 수 있습니다.
-            // 이 예제에서는 간단하게 클라이언트에게 재시도를 요청합니다.
-            return responseFormatter.error(res, '코드 생성 실패, 다시 시도해주세요.', 500);
+                trip = await tripModel.create(tripData);
+            } catch (err) {
+                if (err.code === "23505" && err.constraint === "trips_share_code_key") {
+                    return responseFormatter.error(res, '코드 생성 실패, 다시 시도해주세요.', 500);
+                }
+            }
         }
 
+        responseFormatter.success(res, trip, '여행 생성 성공', 201);
+    } catch (err) {
         responseFormatter.error(res, '서버 오류', 500);
     }
 };
@@ -43,7 +40,6 @@ exports.getTripByShareCode = async (req, res) => {
         }
         responseFormatter.success(res, trip, '여행 조회 성공');
     } catch (err) {
-        console.error('Get Trip Error:', err);
         responseFormatter.error(res, '서버 오류', 500);
     }
 };
@@ -58,7 +54,6 @@ exports.getTripForEdit = async (req, res) => {
         }
         responseFormatter.success(res, editData, '수정용 데이터 조회 성공');
     } catch (err) {
-        console.error('Get Trip For Edit Error:', err);
         responseFormatter.error(res, '서버 오류', 500);
     }
 };
@@ -73,7 +68,6 @@ exports.updateTrip = async (req, res) => {
         }
         responseFormatter.success(res, updatedTrip, '여행 수정 성공');
     } catch (err) {
-        console.error('Update Trip Error:', err);
         responseFormatter.error(res, '서버 오류', 500);
     }
 };
@@ -88,7 +82,6 @@ exports.deleteTrip = async (req, res) => {
         }
         responseFormatter.success(res, deletedTrip, '여행 삭제 성공');
     } catch (err) {
-        console.error('Delete Trip Error:', err);
         responseFormatter.error(res, '서버 오류', 500);
     }
 };
@@ -103,7 +96,6 @@ exports.getDetailedInfo = async (req, res) => {
         }
         responseFormatter.success(res, detail, '여행 상세 조회 성공');
     } catch (err) {
-        console.error('Get Detailed Info Error:', err);
         responseFormatter.error(res, '서버 오류', 500);
     }
 };
