@@ -1,4 +1,5 @@
 require("dotenv").config();
+const path = require('path');
 const express = require("express")
 const app = express()
 const cors = require('cors');
@@ -19,8 +20,11 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Hello, World!");
 });
-
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/swagger', express.static(path.join(__dirname, 'swagger')));
+// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null, {
+  swaggerUrl: '/swagger/swagger.json'
+}));
 app.use('/api', mainRouter);
 
 app.listen(port, () => {
