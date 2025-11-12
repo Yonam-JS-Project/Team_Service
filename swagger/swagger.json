@@ -1,0 +1,900 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Trip Planner API",
+    "description": "여행 일정 플래너 서버의 API 명세서",
+    "version": "1.0.0",
+    "contact": {
+      "name": "API Support"
+    }
+  },
+  "servers": [
+    {
+      "description": "Local development server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Trip",
+      "description": "여행 생성, 조회, 수정, 삭제 관련 API"
+    },
+    {
+      "name": "Checklist",
+      "description": "장소 체크리스트(완료 상태) 관련 API"
+    },
+    {
+      "name": "Album",
+      "description": "여행 앨범 이미지 관련 API"
+    }
+  ],
+  "paths": {
+    "/trips": {
+      "post": {
+        "tags": ["Trip"],
+        "summary": "여행 생성",
+        "description": "새로운 여행을 생성하고 공유 코드(shareCode)를 반환합니다.",
+        "operationId": "createTrip",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TripInput"
+              },
+              "example": {
+                "tripName": "제주도 가족 여행",
+                "startDate": "2025-12-01",
+                "endDate": "2025-12-05",
+                "dailySchedules": [
+                  {
+                    "schedule_date": "2025-12-01",
+                    "places": [
+                      {
+                        "place_name": "제주 국제공항",
+                        "address": "제주 제주시 공항로 2",
+                        "latitude": 33.5113,
+                        "longitude": 126.4927,
+                        "visit_time": "10:00",
+                        "order_index": 1,
+                        "is_completed": false,
+                        "memo": "렌터카 수령"
+                      },
+                      {
+                        "place_name": "동문시장",
+                        "address": "제주 제주시 동문로 16",
+                        "latitude": 33.5141,
+                        "longitude": 126.5283,
+                        "visit_time": "12:00",
+                        "order_index": 2,
+                        "is_completed": false,
+                        "memo": "점심 식사 및 구경"
+                      }
+                    ]
+                  },
+                  {
+                    "schedule_date": "2025-12-02",
+                    "places": [
+                      {
+                        "place_name": "성산일출봉",
+                        "address": "제주 서귀포시 성산읍 일출로 284-12",
+                        "latitude": 33.4587,
+                        "longitude": 126.9417,
+                        "visit_time": "09:00",
+                        "order_index": 1,
+                        "is_completed": false,
+                        "memo": "일출 감상"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "여행 생성 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "shareCode": {
+                      "type": "string",
+                      "description": "생성된 여행의 공유 코드",
+                      "example": "abcd1234"
+                    }
+                  },
+                  "required": ["shareCode"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/trips/{shareCode}": {
+      "get": {
+        "tags": ["Trip"],
+        "summary": "여행 상세 조회",
+        "description": "공유 코드로 여행 전체 정보를 조회합니다.",
+        "operationId": "getTripDetails",
+        "parameters": [
+          {
+            "name": "shareCode",
+            "in": "path",
+            "required": true,
+            "description": "여행 공유 코드",
+            "schema": {
+              "type": "string"
+            },
+            "example": "abcd1234"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "여행 정보 반환",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TripDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "여행을 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Trip"],
+        "summary": "여행 수정",
+        "description": "기존 여행 정보를 수정합니다.",
+        "operationId": "updateTrip",
+        "parameters": [
+          {
+            "name": "shareCode",
+            "in": "path",
+            "required": true,
+            "description": "여행 공유 코드",
+            "schema": {
+              "type": "string"
+            },
+            "example": "abcd1234"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TripInput"
+              },
+              "example": {
+                "tripName": "제주도 가족 여행 (수정됨)",
+                "startDate": "2025-12-01",
+                "endDate": "2025-12-06",
+                "dailySchedules": [
+                  {
+                    "schedule_date": "2025-12-01",
+                    "places": [
+                      {
+                        "place_name": "제주 국제공항",
+                        "address": "제주 제주시 공항로 2",
+                        "latitude": 33.5113,
+                        "longitude": 126.4927,
+                        "visit_time": "10:00",
+                        "order_index": 1,
+                        "is_completed": true,
+                        "memo": "렌터카 수령 및 출발"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Trip updated successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "여행을 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Trip"],
+        "summary": "여행 삭제",
+        "description": "여행 정보를 삭제합니다.",
+        "operationId": "deleteTrip",
+        "parameters": [
+          {
+            "name": "shareCode",
+            "in": "path",
+            "required": true,
+            "description": "여행 공유 코드",
+            "schema": {
+              "type": "string"
+            },
+            "example": "abcd1234"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "삭제 성공"
+          },
+          "404": {
+            "description": "여행을 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/trips/{shareCode}/details": {
+      "get": {
+        "tags": ["Trip"],
+        "summary": "여행 요약 정보 조회",
+        "description": "여행의 기본 정보만 간략하게 조회합니다.",
+        "operationId": "getTripSummary",
+        "parameters": [
+          {
+            "name": "shareCode",
+            "in": "path",
+            "required": true,
+            "description": "여행 공유 코드",
+            "schema": {
+              "type": "string"
+            },
+            "example": "abcd1234"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "요약 정보 반환",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TripSummary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "여행을 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/trips/{shareCode}/for-edit": {
+      "get": {
+        "tags": ["Trip"],
+        "summary": "수정용 여행 데이터 조회",
+        "description": "여행 수정을 위한 전체 데이터를 조회합니다.",
+        "operationId": "getTripForEdit",
+        "parameters": [
+          {
+            "name": "shareCode",
+            "in": "path",
+            "required": true,
+            "description": "여행 공유 코드",
+            "schema": {
+              "type": "string"
+            },
+            "example": "abcd1234"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "수정용 데이터 반환",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TripDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "여행을 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/checklist/{placeId}": {
+      "put": {
+        "tags": ["Checklist"],
+        "summary": "체크리스트 토글",
+        "description": "장소의 완료 상태를 토글합니다 (완료 ↔ 미완료).",
+        "operationId": "toggleChecklistItem",
+        "parameters": [
+          {
+            "name": "placeId",
+            "in": "path",
+            "required": true,
+            "description": "장소 ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "상태 변경 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "is_completed": {
+                      "type": "boolean",
+                      "description": "변경된 완료 상태"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "장소를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/album": {
+      "get": {
+        "tags": ["Album"],
+        "summary": "모든 공개 이미지 조회",
+        "description": "전체 공개된 앨범 이미지 목록을 조회합니다.",
+        "operationId": "getAllPublicImages",
+        "responses": {
+          "200": {
+            "description": "이미지 목록 반환",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AlbumImage"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/album/{shareCode}": {
+      "get": {
+        "tags": ["Album"],
+        "summary": "특정 여행의 앨범 이미지 조회",
+        "description": "특정 여행에 속한 앨범 이미지들을 조회합니다.",
+        "operationId": "getAlbumImages",
+        "parameters": [
+          {
+            "name": "shareCode",
+            "in": "path",
+            "required": true,
+            "description": "여행 공유 코드",
+            "schema": {
+              "type": "string"
+            },
+            "example": "abcd1234"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "앨범 이미지 목록 반환",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AlbumImage"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "여행을 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Album"],
+        "summary": "앨범 이미지 업로드",
+        "description": "여행 앨범에 이미지를 업로드합니다.",
+        "operationId": "uploadAlbumImages",
+        "parameters": [
+          {
+            "name": "shareCode",
+            "in": "path",
+            "required": true,
+            "description": "여행 공유 코드",
+            "schema": {
+              "type": "string"
+            },
+            "example": "abcd1234"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "albumImages": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "업로드할 이미지 파일들"
+                  }
+                },
+                "required": ["albumImages"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "업로드 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Images uploaded successfully"
+                    },
+                    "uploadedCount": {
+                      "type": "integer",
+                      "example": 3
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "여행을 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/album/{imageId}": {
+      "delete": {
+        "tags": ["Album"],
+        "summary": "특정 이미지 삭제",
+        "description": "앨범에서 특정 이미지를 삭제합니다.",
+        "operationId": "deleteAlbumImage",
+        "parameters": [
+          {
+            "name": "imageId",
+            "in": "path",
+            "required": true,
+            "description": "이미지 ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "삭제 성공"
+          },
+          "404": {
+            "description": "이미지를 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TripInput": {
+        "type": "object",
+        "required": ["tripName", "startDate", "endDate", "dailySchedules"],
+        "properties": {
+          "tripName": {
+            "type": "string",
+            "description": "여행 이름",
+            "example": "제주도 가족 여행"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date",
+            "description": "여행 시작일 (YYYY-MM-DD)",
+            "example": "2025-12-01"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date",
+            "description": "여행 종료일 (YYYY-MM-DD)",
+            "example": "2025-12-05"
+          },
+          "dailySchedules": {
+            "type": "array",
+            "description": "일별 일정 목록",
+            "items": {
+              "$ref": "#/components/schemas/DailySchedule"
+            }
+          }
+        }
+      },
+      "DailySchedule": {
+        "type": "object",
+        "required": ["schedule_date", "places"],
+        "properties": {
+          "schedule_date": {
+            "type": "string",
+            "format": "date",
+            "description": "일정 날짜 (YYYY-MM-DD)",
+            "example": "2025-12-01"
+          },
+          "places": {
+            "type": "array",
+            "description": "해당 날짜의 장소 목록",
+            "items": {
+              "$ref": "#/components/schemas/Place"
+            }
+          }
+        }
+      },
+      "Place": {
+        "type": "object",
+        "required": [
+          "place_name",
+          "address",
+          "latitude",
+          "longitude",
+          "visit_time",
+          "order_index"
+        ],
+        "properties": {
+          "place_name": {
+            "type": "string",
+            "description": "장소 이름",
+            "example": "제주 국제공항"
+          },
+          "address": {
+            "type": "string",
+            "description": "주소",
+            "example": "제주 제주시 공항로 2"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double",
+            "description": "위도",
+            "example": 33.5113
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double",
+            "description": "경도",
+            "example": 126.4927
+          },
+          "visit_time": {
+            "type": "string",
+            "description": "방문 시간 (HH:MM)",
+            "example": "10:00"
+          },
+          "order_index": {
+            "type": "integer",
+            "description": "방문 순서",
+            "example": 1
+          },
+          "is_completed": {
+            "type": "boolean",
+            "description": "완료 여부",
+            "default": false,
+            "example": false
+          },
+          "memo": {
+            "type": "string",
+            "description": "메모",
+            "example": "렌터카 수령"
+          }
+        }
+      },
+      "TripDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "여행 ID"
+          },
+          "shareCode": {
+            "type": "string",
+            "description": "공유 코드",
+            "example": "abcd1234"
+          },
+          "tripName": {
+            "type": "string",
+            "description": "여행 이름",
+            "example": "제주도 가족 여행"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date",
+            "description": "여행 시작일",
+            "example": "2025-12-01"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date",
+            "description": "여행 종료일",
+            "example": "2025-12-05"
+          },
+          "dailySchedules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DailyScheduleDetail"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "생성 일시"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "수정 일시"
+          }
+        }
+      },
+      "DailyScheduleDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "일정 ID"
+          },
+          "schedule_date": {
+            "type": "string",
+            "format": "date",
+            "description": "일정 날짜"
+          },
+          "places": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlaceDetail"
+            }
+          }
+        }
+      },
+      "PlaceDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "장소 ID"
+          },
+          "place_name": {
+            "type": "string",
+            "description": "장소 이름"
+          },
+          "address": {
+            "type": "string",
+            "description": "주소"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double",
+            "description": "위도"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double",
+            "description": "경도"
+          },
+          "visit_time": {
+            "type": "string",
+            "description": "방문 시간"
+          },
+          "order_index": {
+            "type": "integer",
+            "description": "방문 순서"
+          },
+          "is_completed": {
+            "type": "boolean",
+            "description": "완료 여부"
+          },
+          "memo": {
+            "type": "string",
+            "description": "메모"
+          }
+        }
+      },
+      "TripSummary": {
+        "type": "object",
+        "properties": {
+          "shareCode": {
+            "type": "string",
+            "description": "공유 코드"
+          },
+          "tripName": {
+            "type": "string",
+            "description": "여행 이름"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date",
+            "description": "여행 시작일"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date",
+            "description": "여행 종료일"
+          },
+          "totalDays": {
+            "type": "integer",
+            "description": "총 일수"
+          },
+          "totalPlaces": {
+            "type": "integer",
+            "description": "총 장소 수"
+          }
+        }
+      },
+      "AlbumImage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "이미지 ID"
+          },
+          "imageUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "이미지 URL"
+          },
+          "shareCode": {
+            "type": "string",
+            "description": "여행 공유 코드"
+          },
+          "uploadedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "업로드 일시"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "에러 메시지"
+          },
+          "message": {
+            "type": "string",
+            "description": "상세 메시지"
+          }
+        }
+      }
+    }
+  }
+}

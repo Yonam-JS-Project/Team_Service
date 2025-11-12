@@ -41,7 +41,6 @@ CREATE TABLE places (
 CREATE TABLE photos (
     photo_id SERIAL PRIMARY KEY,
     trip_id INTEGER REFERENCES trips(trip_id) ON DELETE CASCADE,
-    place_id INTEGER REFERENCES places(place_id) ON DELETE CASCADE,
     photo_url TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -50,4 +49,3 @@ CREATE TABLE photos (
 CREATE INDEX idx_daily_schedules_trip_id ON daily_schedules(trip_id);
 CREATE INDEX idx_places_schedule_id ON places(schedule_id);
 CREATE INDEX idx_photos_trip_id ON photos(trip_id);
-CREATE INDEX idx_photos_place_id ON photos(place_id);
