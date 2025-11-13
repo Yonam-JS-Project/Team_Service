@@ -29,6 +29,7 @@ services:
       DB_NAME: travel_db
       DB_USER: postgres
       DB_PASSWORD: ${DB_PASSWORD}
+      SERVER_HOST: ${SERVER_HOST}
       PORT: 3000
 
 volumes:
