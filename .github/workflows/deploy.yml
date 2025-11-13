@@ -61,10 +61,12 @@ jobs:
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
         run: |
           ssh -o StrictHostKeyChecking=no \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
             export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            export SERVER_HOST=${{ secrets.SERVER_HOST }}
             cd ${{ secrets.DEPLOY_PATH }}
             docker-compose down
             docker-compose build --no-cache
