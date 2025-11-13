@@ -9,7 +9,9 @@ const swaggerDocument = require('./swagger/swagger.json');
 
 app.use(cors());
 
-const serverUrl = process.env.SERVER_HOST || 'http://localhost:3000';
+const serverUrl = process.env.SERVER_HOST 
+  ? `http://${process.env.SERVER_HOST}` 
+  : 'http://localhost:3000';
 
 swaggerDocument.servers = [
   { url: `${serverUrl}/api` }
@@ -29,5 +31,5 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api', mainRouter);
 
 app.listen(port, () => {
-    console.log(`Server Online: http://${serverUrl}`)
+    console.log(`Server Online: ${serverUrl}`)
 })
