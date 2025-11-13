@@ -31,5 +31,5 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api', mainRouter);
 
 app.listen(port, () => {
-    console.log(`Server Online: http://localhost:${port}`)
+    console.log(`Server Online: http://${serverUrl}:${port}`)
 })
