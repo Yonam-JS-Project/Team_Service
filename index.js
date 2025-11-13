@@ -12,6 +12,7 @@ app.use(cors());
 
 const serverUrl = process.env.SERVER_HOST || 'http://localhost:3000';
 
+console.log(process.env.SERVER_HOST);
 swaggerDocument.servers = [
   { url: `${serverUrl}/api`, description: 'Local API Server' }
 ];
