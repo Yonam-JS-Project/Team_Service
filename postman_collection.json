@@ -96,6 +96,35 @@
 					"response": []
 				},
 				{
+					"name": "Get Trip For Edit",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/trips/:shareCode/for-edit",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"trips",
+								":shareCode",
+								"for-edit"
+							],
+							"variable": [
+								{
+									"key": "shareCode",
+									"value": "YOUR_SHARE_CODE",
+									"description": "Replace with an actual share code from a created trip"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Update Trip",
 					"request": {
 						"method": "PUT",
