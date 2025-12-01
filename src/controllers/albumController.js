@@ -2,6 +2,11 @@ const albumModel = require('../models/albumModel');
 const tripModel = require('../models/tripModel');
 const responseFormatter = require('../utils/responseFormatter');
 
+
+const serverUrl = process.env.SERVER_HOST 
+  ? `http://${process.env.SERVER_HOST}` 
+  : 'http://localhost:3000';
+
 // 모든 앨범 이미지 조회
 exports.getAllPublicImages = async (req, res) => {
     try {
@@ -42,7 +47,7 @@ exports.uploadAlbumImages = async (req, res) => {
 
         // 여러 파일 정보를 동시에 처리
         const imagePromises = req.files.map(file => {
-            const imageUrl = file.path.replace(/\\/g, '/').replace('uploads', '');
+            const imageUrl = `${serverUrl}${file.path.replace(/\\/g, '/').replace('uploads', '')}`;
 
             return albumModel.addAlbumImage(shareCode, imageUrl);
         });
