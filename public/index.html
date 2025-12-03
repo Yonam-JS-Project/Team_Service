@@ -1,0 +1,1950 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Tim Tim 여행 플래너</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --accent:#5b8dff;
+  --accent2:#32c2ff;
+  --muted:#6b7280;
+  --card:#ffffff;
+  --bg:#e9f1ff;
+}
+
+*{
+  box-sizing:border-box;
+  font-family:'Pretendard', Inter, system-ui, -apple-system, sans-serif;
+}
+
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 0% 0%, #fef3c7 0, transparent 45%),
+    radial-gradient(circle at 100% 0%, #fecaca 0, transparent 45%),
+    radial-gradient(circle at 0% 100%, #bae6fd 0, transparent 45%),
+    radial-gradient(circle at 100% 100%, #e9d5ff 0, transparent 45%),
+    linear-gradient(135deg,#b5c9ff,#f5d9ff,#d7f3ff);
+  background-size:160% 160%;
+  animation:bgflow 20s ease-in-out infinite;
+  color:#111;
+}
+
+@keyframes bgflow{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+header{
+  background:rgba(255,255,255,0.8);
+  backdrop-filter:blur(20px);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:18px 28px;
+  border-bottom:1px solid rgba(255,255,255,0.6);
+  box-shadow:0 10px 25px rgba(15,23,42,0.12);
+  position:sticky;
+  top:0;
+  z-index:99;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.logo .mark{
+  width:48px;
+  height:48px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#4f46e5,#38bdf8);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-weight:800;
+  font-size:20px;
+  box-shadow:0 8px 22px rgba(15,23,42,0.25);
+}
+
+nav button{
+  margin-left:10px;
+  color:white;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border:none;
+  padding:9px 16px;
+  border-radius:999px;
+  cursor:pointer;
+  font-weight:600;
+  font-size:13px;
+  transition:0.22s ease;
+  box-shadow:0 4px 18px rgba(37,99,235,0.45);
+}
+nav button:hover{
+  transform:translateY(-2px) scale(1.02);
+  box-shadow:0 10px 26px rgba(37,99,235,0.6);
+}
+
+.container{
+  max-width:1120px;
+  margin:40px auto 60px;
+  padding:0 20px;
+}
+
+.page{
+  display:none;
+}
+#homePage{
+  display:block;
+}
+
+main#homePage h1{
+  margin:0 0 6px;
+  font-size:30px;
+  letter-spacing:-0.03em;
+}
+main#homePage p{
+  margin:0;
+  font-size:14px;
+  color:var(--muted);
+}
+
+section.subpage{
+  background:rgba(255,255,255,0.9);
+  backdrop-filter:blur(18px);
+  padding:28px;
+  margin-top:24px;
+  border-radius:24px;
+  box-shadow:0 18px 40px rgba(15,23,42,0.18);
+}
+
+.card-grid{
+  display:flex;
+  gap:22px;
+  margin-top:32px;
+}
+
+.card{
+  position:relative;
+  flex:1 1 0;
+  min-height:210px;
+  border-radius:26px;
+  cursor:pointer;
+  text-align:left;
+  padding:22px 20px;
+  box-shadow:0 24px 46px rgba(15,23,42,0.22);
+  overflow:hidden;
+  transition:transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+  color:#0f172a;
+}
+
+.card:nth-child(1){
+  background:linear-gradient(135deg,#fee2e2,#fecaca);
+}
+.card:nth-child(2){
+  background:linear-gradient(135deg,#bbf7d0,#6ee7b7);
+}
+.card:nth-child(3){
+  background:linear-gradient(135deg,#dbeafe,#bfdbfe);
+}
+.card:nth-child(4){
+  background:linear-gradient(135deg,#ede9fe,#ddd6fe);
+}
+.card:nth-child(5){
+  background:linear-gradient(135deg,#fef3c7,#fde68a);
+}
+
+.card:nth-child(1):hover{
+  transform:translateY(-10px);
+  box-shadow:0 30px 52px rgba(248,113,113,0.6);
+}
+.card:nth-child(2):hover{
+  transform:translateY(-6px) scale(1.03);
+  box-shadow:0 26px 46px rgba(34,197,94,0.6);
+}
+.card:nth-child(3):hover{
+  transform:translateY(-8px) translateX(4px);
+  box-shadow:0 28px 50px rgba(59,130,246,0.6);
+}
+.card:nth-child(4):hover{
+  transform:translateY(-5px) rotate(-1deg);
+  box-shadow:0 26px 48px rgba(129,140,248,0.65);
+}
+.card:nth-child(5):hover{
+  transform:translateY(-12px) scale(1.04);
+  box-shadow:0 32px 56px rgba(234,179,8,0.7);
+}
+
+.card h3{
+  margin:0 0 10px;
+  font-size:18px;
+}
+.card p{
+  margin:0;
+  font-size:13px;
+  color:#374151;
+}
+
+button{
+  font-size:14px;
+  font-weight:600;
+  border:none;
+  border-radius:12px;
+  padding:9px 16px;
+  cursor:pointer;
+  color:white;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  box-shadow:0 4px 16px rgba(37,99,235,0.35);
+}
+button:hover{
+  transform:translateY(-2px) scale(1.02);
+  box-shadow:0 10px 24px rgba(37,99,235,0.55);
+}
+
+.input-group{
+  margin:15px 0;
+  padding:18px;
+  background:rgba(255,255,255,0.98);
+  border-radius:16px;
+  box-shadow:0 8px 20px rgba(15,23,42,0.08);
+}
+
+.input-group label{
+  display:block;
+  margin-top:8px;
+  font-size:13px;
+  font-weight:600;
+  color:var(--muted);
+}
+
+.input-group input,
+.input-group textarea,
+.input-group select{
+  width:100%;
+  padding:9px 10px;
+  margin-top:4px;
+  border-radius:10px;
+  border:1px solid #dde3f0;
+  font-size:14px;
+  box-sizing:border-box;
+}
+
+.schedule-item{
+  background:#f5f7ff;
+  border:1px solid #d5dcff;
+  padding:16px;
+  margin:12px 0;
+  border-radius:14px;
+  position:relative;
+}
+
+.place-item{
+  background:#eef4ff;
+  border:1px solid #c5d3ff;
+  padding:40px 12px 12px 12px;
+  margin:8px 0;
+  border-radius:12px;
+  position:relative;
+}
+
+.add-btn{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  padding:7px 12px;
+  border-radius:10px;
+  font-size:13px;
+}
+
+.remove-btn{
+  position:absolute;
+  top:10px;
+  right:10px;
+  background:#f97373;
+  box-shadow:none;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+}
+.remove-btn:hover{
+  background:#ef4444;
+  transform:none;
+  box-shadow:none;
+}
+
+.inline-inputs{
+  display:flex;
+  gap:10px;
+}
+.inline-inputs > div{
+  flex:1;
+}
+
+#map{
+  background:rgba(255,255,255,0.9);
+  border-radius:18px;
+  height:350px;
+  margin-top:15px;
+  box-shadow:0 14px 32px rgba(15,23,42,0.22);
+}
+
+.album-card{
+  background:rgba(255,255,255,0.98);
+  border-radius:16px;
+  padding:12px 14px 14px;
+  margin:12px 0;
+  box-shadow:0 12px 26px rgba(15,23,42,0.16);
+}
+.album-card img{
+  width:100%;
+  border-radius:12px;
+  margin-top:8px;
+}
+.album-meta{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+}
+.small-btn{
+  font-size:11px;
+  padding:4px 8px;
+  border-radius:999px;
+}
+
+@media (max-width:900px){
+  .card-grid{
+    flex-wrap:wrap;
+  }
+  .card{
+    flex:1 1 calc(50% - 12px);
+    min-height:190px;
+  }
+}
+
+@media (max-width:600px){
+  header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+  }
+  nav{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-top:6px;
+  }
+  nav button{
+    margin-left:0;
+  }
+  .container{
+    margin-top:24px;
+  }
+  main#homePage h1{
+    font-size:24px;
+  }
+  .card-grid{
+    flex-wrap:wrap;
+  }
+  .card{
+    flex:1 1 100%;
+    min-height:170px;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="mark">Tim</div>
+    <div>
+      <div style="font-weight:700">팀 팀</div>
+      <div style="font-size:12px;color:var(--muted)">여행 플래너</div>
+    </div>
+  </div>
+
+  <nav>
+    <button onclick="showPage('homePage')">메인</button>
+    <button onclick="showPage('schedulePage')">일정 만들기</button>
+    <button onclick="showPage('budgetPage')">예산관리</button>
+    <button onclick="showPage('checkPage')">체크리스트</button>
+    <button onclick="showPage('albumPage')">앨범</button>
+    <button onclick="showPage('mapPage')">지도보기</button>
+  </nav>
+</header>
+
+<main class="container page" id="homePage">
+  <h1>여행 계획 구성</h1>
+  <p style="color:var(--muted)">여행 플래너</p>
+  <div class="card-grid">
+    <div class="card" onclick="showPage('schedulePage')"><h3>일정 만들기</h3></div>
+    <div class="card" onclick="showPage('budgetPage')"><h3>예산 관리</h3></div>
+    <div class="card" onclick="showPage('checkPage')"><h3>체크리스트</h3></div>
+    <div class="card" onclick="showPage('albumPage')"><h3>앨범 보기</h3></div>
+    <div class="card" onclick="showPage('mapPage')"><h3>지도 보기</h3></div>
+  </div>
+</main>
+
+<section class="subpage page" id="schedulePage">
+  <h2>여행 일정 만들기</h2>
+  <p style="color:var(--muted);margin-bottom:16px;">
+    여행 정보를 입력한 뒤 여행 생성을 누르면 공유 코드가 발급됩니다.
+  </p>
+
+  <div class="input-group">
+    <label>여행 이름</label>
+    <input type="text" id="tripName" placeholder="여행 이름을 입력하세요">
+
+    <label>시작 날짜</label>
+    <input type="date" id="startDate" >
+
+    <label>종료 날짜</label>
+    <input type="date" id="endDate" >
+
+    <h3 style="margin-top:18px;">일정 추가</h3>
+    <div id="schedulesList"></div>
+    <button class="add-btn" type="button" onclick="addSchedule()">+ 일정 추가</button>
+  </div>
+
+  <button type="button" onclick="createTrip()">여행 생성</button>
+
+  <h3 style="margin-top:18px;">공유 코드: <span id="shareCode">-</span></h3>
+  <p style="font-size:12px;color:#6b7280;margin-top:6px;">
+    공유 코드를 입력한 뒤 아래의 여행 수정 버튼을 누르면, 아래쪽에 수정용 폼이 뜨고 그걸로 내용을 바꿀 수 있습니다.
+  </p>
+
+  <div class="input-group" style="margin-top:12px;">
+    <label>공유 코드로 수정 / 삭제</label>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <input type="text" id="manageShareCode" placeholder="예: ABC123" style="flex:1;">
+      <button type="button" onclick="updateTrip()">여행 수정</button>
+      <button type="button" style="background:#ff4b4b;" onclick="deleteTrip()">삭제</button>
+    </div>
+  </div>
+
+  <div id="editTripBox" class="input-group" style="margin-top:16px; display:none;">
+    <h3 style="margin-top:0;">여행 수정 폼</h3>
+    <p style="font-size:12px;color:#6b7280;margin-bottom:8px;">
+      공유 코드를 입력하고 수정 버튼을 누르면 아래에 수정 할 수있는 폼이 생성됩니다.
+    </p>
+
+    <label>여행 이름</label>
+    <input type="text" id="editTripName" placeholder="수정할 여행 이름">
+
+    <label>시작 날짜</label>
+    <input type="date" id="editStartDate">
+
+    <label>종료 날짜</label>
+    <input type="date" id="editEndDate">
+
+    <h3 style="margin-top:18px;">일정 수정</h3>
+    <div id="editSchedulesList"></div>
+    <button class="add-btn" type="button" onclick="addEditSchedule()">+ 일정 추가</button>
+  </div>
+</section>
+
+<section class="subpage page" id="budgetPage">
+  <h2>예산 관리</h2>
+
+  <input id="bName" placeholder="항목명" style="padding:10px;border-radius:10px;width:45%;">
+  <input id="bCost" placeholder="금액" type="number" style="padding:10px;border-radius:10px;width:45%;">
+  <button id="addBudgetBtn">추가</button>
+
+  <h3>총 합계: <span id="budgetTotal">0 원</span></h3>
+  <div id="budgetList"></div>
+</section>
+
+<section class="subpage page" id="checkPage">
+  <h2>체크리스트</h2>
+  <p style="color:var(--muted);font-size:13px;">목록</p>
+
+  <div class="input-group" style="margin-top:8px;">
+    <label>공유 코드로 불러오기</label>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <input type="text" id="checkShareCodeInput" placeholder="예: ABC123" style="flex:1;">
+      <button type="button" onclick="loadChecklistFromServer()">불러오기</button>
+    </div>
+  </div>
+
+  <div id="checkListBox"></div>
+</section>
+
+<section class="subpage page" id="albumPage">
+  <h2>앨범</h2>
+  <p style="color:var(--muted);font-size:13px;"></p>
+
+  <div class="input-group">
+    <h3 style="margin-top:0;">사진 업로드</h3>
+
+    <label>공유 코드</label>
+    <input type="text" id="albumShareCodeInput" placeholder="예: ABC123">
+
+    <label>이미지 파일 선택</label>
+    <input type="file" id="albumUploadInput" multiple accept="image/*">
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+      <button type="button" onclick="uploadAlbumImages()">이미지 업로드</button>
+      <button type="button" onclick="loadMyAlbum()">앨범 불러오기</button>
+      <button type="button" onclick="openAlbumFromShareInput()">개인 앨범 전체보기</button>
+    </div>
+  </div>
+
+  <div id="albumBox"></div>
+
+  <div class="input-group" style="margin-top:18px;">
+    <h3 style="margin-top:0;">전체 앨범</h3>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+      <button type="button" onclick="loadAllAlbums()">전체 앨범 불러오기</button>
+    </div>
+    <div id="allAlbumBox"></div>
+  </div>
+</section>
+
+<section class="subpage page" id="albumViewPage">
+  <h2 id="albumViewTitle">앨범 전체 보기</h2>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">
+    공유 코드: <span id="albumViewShareCode">-</span>
+  </p>
+  <div style="margin-bottom:14px;">
+    <button type="button" onclick="showPage('albumPage')">앨범 목록으로 돌아가기</button>
+  </div>
+  <div id="albumViewBox"></div>
+</section>
+
+<section class="subpage page" id="mapPage">
+  <h2>내 주변 지도</h2>
+  <button id="myLocationBtn">현재 위치로 이동</button>
+  <div id="map"></div>
+</section>
+
+<script>
+function showPage(id){
+  document.querySelectorAll('.page').forEach(function(p){p.style.display='none';});
+  document.getElementById(id).style.display='block';
+  if(id === "checkPage") loadChecklist();
+  if(id === "albumPage") loadMyAlbum();
+}
+
+const BASE_URL = "http://158.180.71.25";
+const API_BASE = BASE_URL + "/api";
+
+let scheduleIndex = 0;
+let editScheduleIndex = 0;
+
+const shareCodeEl = document.getElementById("shareCode");
+
+let isEditMode = false;
+let editShareCode = null;
+
+function extractShareCode(data){
+  if(!data || typeof data !== "object") return null;
+  if(data.shareCode) return data.shareCode;
+  if(data.share_code) return data.share_code;
+  if(data.data){
+    if(data.data.shareCode) return data.data.shareCode;
+    if(data.data.share_code) return data.data.share_code;
+  }
+  if(data.result){
+    if(data.result.shareCode) return data.result.shareCode;
+    if(data.result.share_code) return data.result.share_code;
+  }
+  const candidates = [data, data.data].filter(function(v){
+    return v && typeof v === "object";
+  });
+  for(const obj of candidates){
+    for(const pair of Object.entries(obj)){
+      const k = pair[0];
+      const v = pair[1];
+      const key = k.toLowerCase();
+      if(key.includes("share") && key.includes("code")){
+        return v;
+      }
+    }
+  }
+  return null;
+}
+
+async function safeJson(res){
+  const text = await res.text();
+  if(!text){
+    return {};
+  }
+  try{
+    return JSON.parse(text);
+  }catch(e){
+    console.error("서버 원본 응답:", text);
+    throw new Error("서버가 JSON 대신 다른 형식의 응답을 보냈습니다: " + text.slice(0,80));
+  }
+}
+
+function pickTripRoot(raw){
+  if(!raw || typeof raw !== "object") return {};
+  const candidates = [];
+  if(raw && typeof raw === "object") candidates.push(raw);
+  if(raw.data && typeof raw.data === "object") candidates.push(raw.data);
+  if(raw.result && typeof raw.result === "object") candidates.push(raw.result);
+  if(raw.trip && typeof raw.trip === "object") candidates.push(raw.trip);
+  if(raw.item && typeof raw.item === "object") candidates.push(raw.item);
+  let root = candidates[0] || {};
+  for(const obj of candidates){
+    if(!obj || typeof obj !== "object") continue;
+    if(obj.tripName || obj.dailySchedules || obj.schedules){
+      root = obj;
+      break;
+    }
+  }
+  return root;
+}
+
+function extractPlaceMemo(place){
+  if(!place || typeof place !== "object") return "";
+  const direct =
+    place.memo ||
+    place.placeMemo ||
+    place.memo_text ||
+    place.memoText ||
+    place.place_memo ||
+    place.note ||
+    place.notes ||
+    place.description ||
+    "";
+  if(direct && String(direct).trim()) return String(direct).trim();
+  const knownKeys = {
+    place_name:1, placeName:1, name:1,
+    address:1, latitude:1, longitude:1,
+    visit_time:1, visitTime:1,
+    schedule_date:1, scheduleDate:1, date:1,
+    order_index:1, orderIndex:1,
+    is_completed:1, isCompleted:1,
+    id:1, placeId:1, place_id:1,
+    createdAt:1, created_at:1, updatedAt:1, updated_at:1
+  };
+  const extras = [];
+  for(const key in place){
+    if(!Object.prototype.hasOwnProperty.call(place, key)) continue;
+    if(knownKeys[key]) continue;
+    const val = place[key];
+    if(typeof val === "string" && val.trim()){
+      extras.push(val.trim());
+    }
+  }
+  return extras.join(" / ");
+}
+
+function addSchedule() {
+  const container = document.getElementById('schedulesList');
+  const index = scheduleIndex++;
+  const scheduleDiv = document.createElement('div');
+  scheduleDiv.className = 'schedule-item';
+  scheduleDiv.id = "schedule-" + index;
+  scheduleDiv.innerHTML = `
+    <button class="remove-btn" type="button" onclick="removeSchedule(${index})">삭제</button>
+    <h3>일정 ${index + 1}</h3>
+    <label>날짜</label>
+    <input type="date" id="schedule-date-${index}">
+    <h4 style="margin-top:12px;">장소 목록</h4>
+    <div id="places-${index}"></div>
+    <button class="add-btn" type="button" onclick="addPlace(${index})">+ 장소 추가</button>
+  `;
+  container.appendChild(scheduleDiv);
+  addPlace(index);
+}
+
+function addScheduleWithData(scheduleData) {
+  const container = document.getElementById('schedulesList');
+  const index = scheduleIndex++;
+  const dateValue =
+    scheduleData.schedule_date ||
+    scheduleData.scheduleDate ||
+    scheduleData.date ||
+    document.getElementById('startDate').value
+
+  const scheduleDiv = document.createElement('div');
+  scheduleDiv.className = 'schedule-item';
+  scheduleDiv.id = "schedule-" + index;
+  scheduleDiv.innerHTML = `
+    <button class="remove-btn" type="button" onclick="removeSchedule(${index})">삭제</button>
+    <h3>일정 ${index + 1}</h3>
+    <label>날짜</label>
+    <input type="date" id="schedule-date-${index}" >
+    <h4 style="margin-top:12px;">장소 목록</h4>
+    <div id="places-${index}"></div>
+    <button class="add-btn" type="button" onclick="addPlace(${index})">+ 장소 추가</button>
+  `;
+  container.appendChild(scheduleDiv);
+
+  const placesArr = scheduleData.places || scheduleData.dailyPlaces || [];
+  if(Array.isArray(placesArr) && placesArr.length){
+    placesArr.forEach(function(place){
+      addPlaceWithData(index, place);
+    });
+  } else {
+    addPlace(index);
+  }
+}
+
+function removeSchedule(index) {
+  const elem = document.getElementById("schedule-" + index);
+  if (elem) elem.remove();
+}
+
+function addPlace(scheduleIndex) {
+  const container = document.getElementById("places-" + scheduleIndex);
+  const placeIndex = container.children.length;
+  const placeDiv = document.createElement('div');
+  placeDiv.className = 'place-item';
+  placeDiv.innerHTML = `
+    <button class="remove-btn" type="button" onclick="this.parentElement.remove()">×</button>
+    <label>장소 이름</label>
+    <input type="text" class="place-name" placeholder="예: 제주 국제공항">
+    <label>주소</label>
+    <input type="text" class="place-address" placeholder="예: 제주 제주시 공항로 2">
+    <div class="inline-inputs">
+      <div>
+        <label>위도</label>
+        <input type="number" step="0.000001" class="place-lat" placeholder="33.5113">
+      </div>
+      <div>
+        <label>경도</label>
+        <input type="number" step="0.000001" class="place-lng" placeholder="126.4927">
+      </div>
+    </div>
+    <div class="inline-inputs">
+      <div>
+        <label>방문 시간</label>
+        <input type="time" class="place-time">
+      </div>
+      <div>
+        <label>순서</label>
+        <input type="number" class="place-order" value="${placeIndex + 1}">
+      </div>
+    </div>
+    <label>완료 여부</label>
+    <select class="place-completed">
+      <option value="false">미완료</option>
+      <option value="true">완료</option>
+    </select>
+    <label>메모</label>
+    <textarea class="place-memo" placeholder="예: 렌터카 수령"></textarea>
+  `;
+  container.appendChild(placeDiv);
+}
+
+function addPlaceWithData(scheduleIndex, placeData){
+  const container = document.getElementById("places-" + scheduleIndex);
+  const placeIndex = container.children.length;
+
+  const name = placeData.place_name || placeData.placeName || placeData.name || "";
+  const address = placeData.address || "";
+  const lat = (placeData.latitude !== undefined && placeData.latitude !== null) ? placeData.latitude : "";
+  const lng = (placeData.longitude !== undefined && placeData.longitude !== null) ? placeData.longitude : "";
+  const time = placeData.visit_time || placeData.visitTime || "10:00";
+  const order = placeData.order_index || placeData.orderIndex || (placeIndex + 1);
+  const completed = placeData.is_completed === true || placeData.isCompleted === true;
+  const memo = extractPlaceMemo(placeData);
+
+  const placeDiv = document.createElement('div');
+  placeDiv.className = 'place-item';
+  placeDiv.innerHTML = `
+    <button class="remove-btn" type="button" onclick="this.parentElement.remove()"></button>
+    <label>장소 이름</label>
+    <input type="text" class="place-name" placeholder="예: 제주 국제공항" >
+    <label>주소</label>
+    <input type="text" class="place-address" placeholder="예: 제주 제주시 공항로 2">
+    <div class="inline-inputs">
+      <div>
+        <label>위도</label>
+        <input type="number" step="0.000001" class="place-lat" placeholder="33.5113"">
+      </div>
+      <div>
+        <label>경도</label>
+        <input type="number" step="0.000001" class="place-lng" placeholder="126.4927">
+      </div>
+    </div>
+    <div class="inline-inputs">
+      <div>
+        <label>방문 시간</label>
+        <input type="time" class="place-time">
+      </div>
+      <div>
+        <label>순서</label>
+        <input type="number" class="place-order" value="${placeIndex + 1}">
+      </div>
+    </div>
+    <label>완료 여부</label>
+    <select class="place-completed">
+      <option value="false"${completed ? "" : " selected"}>미완료</option>
+      <option value="true"${completed ? " selected" : ""}>완료</option>
+    </select>
+    <label>메모</label>
+    <textarea class="place-memo" placeholder="예: 렌터카 수령">${memo}</textarea>
+  `;
+  container.appendChild(placeDiv);
+}
+
+function collectScheduleData() {
+  const schedules = [];
+  const scheduleItems = document.querySelectorAll('#schedulesList .schedule-item');
+
+  scheduleItems.forEach(function(scheduleItem){
+    const dateInput = scheduleItem.querySelector('input[type="date"]');
+    let date = dateInput ? dateInput.value : "";
+
+    if(!date){
+      const startInput = document.getElementById('startDate');
+      if(startInput && startInput.value){
+        date = startInput.value;
+      }
+    }
+
+    const places = [];
+    const placeItems = scheduleItem.querySelectorAll('.place-item');
+
+    placeItems.forEach(function(placeItem){
+      const name   = placeItem.querySelector('.place-name').value.trim();
+      const address= placeItem.querySelector('.place-address').value.trim();
+      const memo   = placeItem.querySelector('.place-memo').value.trim();
+      const latStr = placeItem.querySelector('.place-lat').value;
+      const lngStr = placeItem.querySelector('.place-lng').value;
+      const time   = placeItem.querySelector('.place-time').value;
+      const order  = placeItem.querySelector('.place-order').value;
+      const completed = placeItem.querySelector('.place-completed').value === 'true';
+
+      const hasContent =
+        name || address || memo || latStr || lngStr || (time && time !== "00:00");
+
+      if(!hasContent) return;
+
+      places.push({
+        place_name:  name,
+        address:     address,
+        latitude:    latStr ? parseFloat(latStr) : 0,
+        longitude:   lngStr ? parseFloat(lngStr) : 0,
+        visit_time:  time || null,
+        order_index: parseInt(order) || 1,
+        is_completed: completed,
+        memo:        memo
+      });
+    });
+
+    if(!places.length) return;
+    if(!date) return;
+
+    schedules.push({
+      schedule_date: date,
+      places: places
+    });
+  });
+
+  return schedules;
+}
+
+function addEditSchedule(scheduleData) {
+  const container = document.getElementById('editSchedulesList');
+  const index = editScheduleIndex++;
+  const dateValue =
+    scheduleData
+      ? (scheduleData.schedule_date ||
+         scheduleData.scheduleDate ||
+         scheduleData.date ||
+         document.getElementById('editStartDate').value)
+      : (document.getElementById('editStartDate').value);
+
+  const scheduleDiv = document.createElement('div');
+  scheduleDiv.className = 'schedule-item';
+  scheduleDiv.id = "edit-schedule-" + index;
+  scheduleDiv.innerHTML = `
+    <button class="remove-btn" type="button" onclick="removeEditSchedule(${index})">삭제</button>
+    <h3>일정 ${index + 1}</h3>
+    <label>날짜</label>
+    <input type="date" id="edit-schedule-date-${index}">
+    <h4 style="margin-top:12px;">장소 목록</h4>
+    <div id="edit-places-${index}"></div>
+    <button class="add-btn" type="button" onclick="addEditPlace(${index})">+ 장소 추가</button>
+  `;
+  container.appendChild(scheduleDiv);
+
+  const placesArr = scheduleData && (scheduleData.places || scheduleData.dailyPlaces) || [];
+  if(Array.isArray(placesArr) && placesArr.length){
+    placesArr.forEach(function(place){
+      addEditPlaceWithData(index, place);
+    });
+  } else {
+    addEditPlace(index);
+  }
+}
+
+function removeEditSchedule(index){
+  const elem = document.getElementById("edit-schedule-" + index);
+  if(elem) elem.remove();
+}
+
+function addEditPlace(scheduleIndex){
+  const container = document.getElementById("edit-places-" + scheduleIndex);
+  const placeIndex = container.children.length;
+  const placeDiv = document.createElement('div');
+  placeDiv.className = 'place-item';
+  placeDiv.innerHTML = `
+    <button class="remove-btn" type="button" onclick="this.parentElement.remove()">×</button>
+    <label>장소 이름</label>
+    <input type="text" class="place-name" placeholder="예: 제주 국제공항">
+    <label>주소</label>
+    <input type="text" class="place-address" placeholder="예: 제주 제주시 공항로 2">
+    <div class="inline-inputs">
+      <div>
+        <label>위도</label>
+        <input type="number" step="0.000001" class="place-lat" placeholder="33.5113">
+      </div>
+      <div>
+        <label>경도</label>
+        <input type="number" step="0.000001" class="place-lng" placeholder="126.4927">
+      </div>
+    </div>
+    <div class="inline-inputs">
+      <div>
+        <label>방문 시간</label>
+        <input type="time" class="place-time">
+      </div>
+      <div>
+        <label>순서</label>
+        <input type="number" class="place-order" value="${placeIndex + 1}">
+      </div>
+    </div>
+    <label>완료 여부</label>
+    <select class="place-completed">
+      <option value="false">미완료</option>
+      <option value="true">완료</option>
+    </select>
+    <label>메모</label>
+    <textarea class="place-memo" placeholder="예: 렌터카 수령"></textarea>
+  `;
+  container.appendChild(placeDiv);
+}
+
+function addEditPlaceWithData(scheduleIndex, placeData){
+  const container = document.getElementById("edit-places-" + scheduleIndex);
+  const placeIndex = container.children.length;
+
+  const name = placeData.place_name || placeData.placeName || placeData.name || "";
+  const address = placeData.address || "";
+  const lat = (placeData.latitude !== undefined && placeData.latitude !== null) ? placeData.latitude : "";
+  const lng = (placeData.longitude !== undefined && placeData.longitude !== null) ? placeData.longitude : "";
+  const time = placeData.visit_time || placeData.visitTime || "10:00";
+  const order = placeData.order_index || placeData.orderIndex || (placeIndex + 1);
+  const completed = placeData.is_completed === true || placeData.isCompleted === true;
+  const memo = extractPlaceMemo(placeData);
+
+  const placeDiv = document.createElement('div');
+  placeDiv.className = 'place-item';
+  placeDiv.innerHTML = `
+    <button class="remove-btn" type="button" onclick="this.parentElement.remove()">×</button>
+    <label>장소 이름</label>
+    <input type="text" class="place-name" placeholder="예: 제주 국제공항">
+    <label>주소</label>
+    <input type="text" class="place-address" placeholder="예: 제주 제주시 공항로 2">
+    <div class="inline-inputs">
+      <div>
+        <label>위도</label>
+        <input type="number" step="0.000001" class="place-lat" placeholder="33.5113">
+      </div>
+      <div>
+        <label>경도</label>
+        <input type="number" step="0.000001" class="place-lng" placeholder="126.4927">
+      </div>
+    </div>
+    <div class="inline-inputs">
+      <div>
+        <label>방문 시간</label>
+        <input type="time" class="place-time">
+      </div>
+      <div>
+        <label>순서</label>
+        <input type="number" class="place-order" value="${placeIndex + 1}">
+      </div>
+    </div>
+    <label>완료 여부</label>
+    <select class="place-completed">
+      <option value="false"${completed ? "" : " selected"}>미완료</option>
+      <option value="true"${completed ? " selected" : ""}>완료</option>
+    </select>
+    <label>메모</label>
+    <textarea class="place-memo" placeholder="예: 렌터카 수령">${memo}</textarea>
+  `;
+  container.appendChild(placeDiv);
+}
+
+function collectEditScheduleData() {
+  const schedules = [];
+  const scheduleItems = document.querySelectorAll('#editSchedulesList .schedule-item');
+
+  scheduleItems.forEach(function(scheduleItem){
+    const dateInput = scheduleItem.querySelector('input[type="date"]');
+    let date = dateInput ? dateInput.value : "";
+
+    if(!date){
+      const startInput = document.getElementById('editStartDate');
+      if(startInput && startInput.value){
+        date = startInput.value;
+      }
+    }
+
+    const places = [];
+    const placeItems = scheduleItem.querySelectorAll('.place-item');
+
+    placeItems.forEach(function(placeItem){
+      const name   = placeItem.querySelector('.place-name').value.trim();
+      const address= placeItem.querySelector('.place-address').value.trim();
+      const memo   = placeItem.querySelector('.place-memo').value.trim();
+      const latStr = placeItem.querySelector('.place-lat').value;
+      const lngStr = placeItem.querySelector('.place-lng').value;
+      const time   = placeItem.querySelector('.place-time').value;
+      const order  = placeItem.querySelector('.place-order').value;
+      const completed = placeItem.querySelector('.place-completed').value === 'true';
+
+      const hasContent =
+        name || address || memo || latStr || lngStr || (time && time !== "00:00");
+
+      if(!hasContent) return;
+
+      places.push({
+        place_name:  name,
+        address:     address,
+        latitude:    latStr ? parseFloat(latStr) : 0,
+        longitude:   lngStr ? parseFloat(lngStr) : 0,
+        visit_time:  time || null,
+        order_index: parseInt(order) || 1,
+        is_completed: completed,
+        memo:        memo
+      });
+    });
+
+    if(!places.length) return;
+    if(!date) return;
+
+    schedules.push({
+      schedule_date: date,
+      places: places
+    });
+  });
+
+  return schedules;
+}
+
+async function createTrip() {
+  try {
+    const tripName  = document.getElementById('tripName').value;
+    const startDate = document.getElementById('startDate').value;
+    const endDate   = document.getElementById('endDate').value;
+
+    if(!tripName || !startDate || !endDate){
+      alert("여행 이름, 시작 날짜, 종료 날짜를 모두 입력하세요.");
+      return;
+    }
+
+    const dailySchedules = collectScheduleData();
+    if(!dailySchedules.length){
+      alert("최소 한 개 이상의 날짜와 장소를 입력해주세요.");
+      return;
+    }
+
+    const res = await fetch(API_BASE + "/trips", {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({ tripName, startDate, endDate, dailySchedules })
+    });
+
+    const data = await safeJson(res);
+
+    if(!res.ok){
+      alert('여행 생성 실패: ' + (data.message || '서버 오류'));
+      return;
+    }
+
+    const code = extractShareCode(data);
+    if(code){
+      shareCodeEl.textContent = code;
+      localStorage.setItem("plan_share", code);
+
+      const manageInput = document.getElementById('manageShareCode');
+      if(manageInput) manageInput.value = code;
+      const checkInput = document.getElementById('checkShareCodeInput');
+      if(checkInput) checkInput.value = code;
+      const albumInput = document.getElementById('albumShareCodeInput');
+      if(albumInput) albumInput.value = code;
+
+      isEditMode = false;
+      editShareCode = null;
+      const editBox = document.getElementById('editTripBox');
+      if(editBox) editBox.style.display = 'none';
+      const btn = document.querySelector('button[onclick="updateTrip()"]');
+      if(btn) btn.textContent = "여행 수정";
+
+      alert('여행이 생성되었습니다. 공유코드: ' + code);
+    } else {
+      alert('여행은 생성됐지만 응답에서 공유코드를 찾지 못했습니다.');
+    }
+  } catch(err){
+    console.error(err);
+    alert('에러 발생: ' + err.message);
+  }
+}
+
+function getCurrentShareCodeForManage(){
+  const input = document.getElementById('manageShareCode');
+  const byInput = input ? input.value.trim() : "";
+  if(byInput) return byInput;
+  const spanText = shareCodeEl.textContent.trim();
+  if(spanText && spanText !== "-") return spanText;
+  return "";
+}
+
+async function updateTrip(){
+  const shareCode = getCurrentShareCodeForManage();
+  if(!shareCode){
+    alert('공유 코드를 입력하세요.');
+    const input = document.getElementById('manageShareCode');
+    if(input) input.focus();
+    return;
+  }
+
+  const editBox = document.getElementById('editTripBox');
+  const btn = document.querySelector('button[onclick="updateTrip()"]');
+
+  if(!isEditMode || editShareCode !== shareCode || !editBox || editBox.style.display === 'none'){
+    try{
+      const res = await fetch(API_BASE + "/trips/" + shareCode + "/for-edit");
+      const data = await safeJson(res);
+      if(!res.ok){
+        throw new Error(data.message || ("HTTP " + res.status + ": 여행 정보를 불러오지 못했습니다."));
+      }
+
+      const root = pickTripRoot(data);
+      const tripNameVal  = root.tripName || root.name || "";
+      const startDateVal = root.startDate || "";
+      const endDateVal   = root.endDate || "";
+      let daily          = root.dailySchedules || root.schedules || [];
+      if(!Array.isArray(daily)) daily = [];
+
+      const editTripName  = document.getElementById('editTripName');
+      const editStartDate = document.getElementById('editStartDate');
+      const editEndDate   = document.getElementById('editEndDate');
+
+      if(editTripName) editTripName.value = tripNameVal;
+      if(editStartDate) editStartDate.value = startDateVal || "";
+      if(editEndDate) editEndDate.value = endDateVal || "";
+
+      const listEl = document.getElementById('editSchedulesList');
+      if(listEl){
+        listEl.innerHTML = "";
+        editScheduleIndex = 0;
+        if(daily.length){
+          daily.forEach(function(sch){ addEditSchedule(sch); });
+        }else{
+          addEditSchedule();
+        }
+      }
+
+      if(editBox){
+        editBox.style.display = 'block';
+        editBox.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+
+      isEditMode = true;
+      editShareCode = shareCode;
+      if(btn) btn.textContent = "수정 저장";
+
+    }catch(err){
+      console.error(err);
+      alert("여행 정보를 불러오지 못했습니다: " + err.message);
+    }
+    return;
+  }
+
+  const tripName  = document.getElementById('editTripName').value;
+  const startDate = document.getElementById('editStartDate').value;
+  const endDate   = document.getElementById('editEndDate').value;
+
+  if(!tripName || !startDate || !endDate){
+    alert('여행 이름, 시작 날짜, 종료 날짜를 모두 입력하세요.');
+    return;
+  }
+
+  try{
+    const dailySchedules = collectEditScheduleData();
+    if(!dailySchedules.length){
+      alert("수정할 일정이 없습니다. 일정과 장소를 입력해주세요.");
+      return;
+    }
+
+    const res = await fetch(API_BASE + "/trips/" + shareCode, {
+      method:'PUT',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({ tripName, startDate, endDate, dailySchedules })
+    });
+    const data = await safeJson(res);
+    if(!res.ok){
+      throw new Error(data.message || ("HTTP " + res.status + ": 여행 수정 실패"));
+    }
+
+    alert(
+      '여행과 일정이 수정되었습니다.\n\n' +
+      '수정된 내용:\n- 여행명: ' + tripName +
+      '\n- 기간: ' + startDate + ' ~ ' + endDate
+    );
+
+    isEditMode = false;
+    editShareCode = null;
+    if(editBox){
+      editBox.style.display = 'none';
+      const listEl = document.getElementById('editSchedulesList');
+      if(listEl) listEl.innerHTML = "";
+      editScheduleIndex = 0;
+    }
+    if(btn) btn.textContent = "여행 수정";
+
+  }catch(err){
+    console.error(err);
+    alert('에러 발생: ' + err.message);
+  }
+}
+
+async function deleteTrip(){
+  const shareCode = getCurrentShareCodeForManage();
+  if(!shareCode){
+    alert('공유 코드를 입력하세요.');
+    const input = document.getElementById('manageShareCode');
+    if(input) input.focus();
+    return;
+  }
+  if(!confirm("공유 코드 " + shareCode + " 여행을 삭제하시겠습니까?")) return;
+
+  try{
+    const res = await fetch(API_BASE + "/trips/" + shareCode, { method:"DELETE" });
+    const data = await safeJson(res);
+    if(!res.ok){
+      throw new Error(data.message || ("HTTP " + res.status + ": 여행 삭제 실패"));
+    }
+    alert('여행이 삭제되었습니다.');
+
+    shareCodeEl.textContent = "-";
+    localStorage.removeItem("plan_share");
+    isEditMode = false;
+    editShareCode = null;
+
+    const tripNameInput  = document.getElementById('tripName');
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput   = document.getElementById('endDate');
+    if(tripNameInput) tripNameInput.value = "";
+    if(startDateInput) startDateInput.value = "";
+    if(endDateInput) endDateInput.value = "";
+
+    const listEl = document.getElementById('schedulesList');
+    if(listEl){
+      listEl.innerHTML = "";
+      scheduleIndex = 0;
+      addSchedule();
+    }
+
+    const editBox = document.getElementById('editTripBox');
+    if(editBox){
+      editBox.style.display = 'none';
+      const editList = document.getElementById('editSchedulesList');
+      if(editList) editList.innerHTML = "";
+      editScheduleIndex = 0;
+    }
+    const btn = document.querySelector('button[onclick="updateTrip()"]');
+    if(btn) btn.textContent = "여행 수정";
+
+  }catch(err){
+    console.error(err);
+    alert('에러 발생: ' + err.message);
+  }
+}
+
+function renderBudget(){
+  const list = JSON.parse(localStorage.getItem("budget") || "[]");
+  const budgetList = document.getElementById("budgetList");
+  budgetList.innerHTML = "";
+  let total = 0;
+
+  list.forEach(function(item, i){
+    total += Number(item.cost);
+    const row = document.createElement("div");
+    row.style =
+      "margin:8px 0;padding:12px;border-radius:12px;background:white;" +
+      "display:flex;justify-content:space-between;align-items:center;";
+    row.innerHTML = `
+      <div>${item.name} - ${Number(item.cost).toLocaleString()} 원</div>
+    `;
+    const del = document.createElement("button");
+    del.textContent = "삭제";
+    del.style = "padding:4px 10px;background:#ff4444;border-radius:8px;";
+    del.onclick = function(){
+      list.splice(i,1);
+      localStorage.setItem("budget", JSON.stringify(list));
+      renderBudget();
+    };
+    row.appendChild(del);
+    budgetList.appendChild(row);
+  });
+
+  document.getElementById("budgetTotal").textContent =
+    total.toLocaleString() + " 원";
+}
+
+document.getElementById("addBudgetBtn").onclick = function(){
+  const bName = document.getElementById("bName");
+  const bCost = document.getElementById("bCost");
+  if(!bName.value.trim()) return alert("항목을 입력하세요.");
+  const list = JSON.parse(localStorage.getItem("budget") || "[]");
+  list.push({ name: bName.value, cost: bCost.value });
+  localStorage.setItem("budget", JSON.stringify(list));
+  bName.value = "";
+  bCost.value = "";
+  renderBudget();
+};
+
+function loadChecklist(){
+  const box = document.getElementById("checkListBox");
+  box.innerHTML = "";
+
+  const list = JSON.parse(localStorage.getItem("localChecklist") || "[]");
+
+  const inputRow = document.createElement("div");
+  inputRow.style =
+    "display:flex;gap:10px;margin-bottom:14px;align-items:center;";
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.placeholder = "필요한 물건을 입력하세요.";
+  input.style =
+    "flex:1;padding:10px;border-radius:10px;border:1px solid #ccc;";
+
+  const addBtn = document.createElement("button");
+  addBtn.textContent = "추가";
+  addBtn.style =
+    "padding:10px 16px;border-radius:10px;background:linear-gradient(135deg,#4f8bfd,#00b4ff);color:white;border:none;cursor:pointer;";
+
+  addBtn.onclick = function(){
+    const text = input.value.trim();
+    if (!text) {
+      alert("내용을 입력하세요.");
+      return;
+    }
+    list.push({ text: text, checked: false });
+    localStorage.setItem("localChecklist", JSON.stringify(list));
+    input.value = "";
+    loadChecklist();
+  };
+
+  inputRow.appendChild(input);
+  inputRow.appendChild(addBtn);
+  box.appendChild(inputRow);
+
+  if (list.length === 0) {
+    const empty = document.createElement("p");
+    empty.textContent = "등록된 항목이 없습니다.";
+    empty.style = "text-align:center;color:gray;margin-top:10px;";
+    box.appendChild(empty);
+    return;
+  }
+
+  const grouped = {};
+  list.forEach(function(item, i){
+    const key = item.placeName && item.placeName.trim()
+      ? item.placeName.trim()
+      : "기타";
+    if(!grouped[key]) grouped[key] = [];
+    grouped[key].push({ item: item, index: i });
+  });
+
+  Object.keys(grouped).forEach(function(placeName){
+    const groupBox = document.createElement("div");
+    groupBox.style =
+      "margin-top:12px;border-radius:12px;background:#eef2ff;padding:10px 10px 6px;";
+
+    const title = document.createElement("div");
+    title.textContent = (placeName === "기타") ? "기타" : ("장소: " + placeName);
+    title.style =
+      "font-size:13px;font-weight:600;color:#4b5563;margin-bottom:6px;";
+    groupBox.appendChild(title);
+
+    grouped[placeName].forEach(function(info){
+      const item = info.item;
+      const i = info.index;
+
+      const row = document.createElement("div");
+      row.style =
+        "display:flex;align-items:center;justify-content:space-between;" +
+        "background:white;border-radius:10px;padding:10px 12px;margin:6px 0;";
+
+      const left = document.createElement("div");
+      left.style = "display:flex;align-items:center;gap:10px;";
+
+      const chk = document.createElement("input");
+      chk.type = "checkbox";
+      chk.checked = !!item.checked;
+
+      chk.onchange = async function(){
+        if(item.placeId){
+          try{
+            const res = await fetch(API_BASE + "/checklist/" + item.placeId, { method:"PUT" });
+            const data = await safeJson(res);
+            if(!res.ok){
+              throw new Error(data.message || ("HTTP " + res.status + ": 체크리스트 수정 실패"));
+            }
+            list[i].checked = !list[i].checked;
+            localStorage.setItem("localChecklist", JSON.stringify(list));
+            loadChecklist();
+          }catch(err){
+            console.error(err);
+            alert("체크리스트 반영 실패: " + err.message);
+            loadChecklist();
+          }
+        }else{
+          list[i].checked = chk.checked;
+          localStorage.setItem("localChecklist", JSON.stringify(list));
+          loadChecklist();
+        }
+      };
+
+      let labelText = "";
+      if(item.date){
+        labelText += item.date;
+      }
+      if(item.memo){
+        if(labelText) labelText += " · ";
+        labelText += item.memo;
+      }
+      if(!labelText){
+        labelText = item.text || "";
+      }
+      if(!labelText){
+        labelText = "내용 없음";
+      }
+
+      const span = document.createElement("span");
+      span.textContent = labelText;
+      if (item.checked) span.style.textDecoration = "line-through";
+
+      left.appendChild(chk);
+      left.appendChild(span);
+
+      const del = document.createElement("button");
+      del.textContent = "삭제";
+      del.style =
+        "padding:6px 10px;background:#ff4b4b;color:white;border:none;border-radius:8px;cursor:pointer;";
+      del.onclick = function(){
+        if (confirm("삭제하시겠습니까?")) {
+          list.splice(i, 1);
+          localStorage.setItem("localChecklist", JSON.stringify(list));
+          loadChecklist();
+        }
+      };
+
+      row.appendChild(left);
+      row.appendChild(del);
+      groupBox.appendChild(row);
+    });
+
+    box.appendChild(groupBox);
+  });
+}
+
+function extractSchedulesFromResponse(raw){
+  const schedules = [];
+
+  function walk(node){
+    if(!node || typeof node !== "object") return;
+    if(Array.isArray(node)){
+      node.forEach(walk);
+      return;
+    }
+
+    let placesArr = null;
+    if(Array.isArray(node.places)) placesArr = node.places;
+    else if(Array.isArray(node.dailyPlaces)) placesArr = node.dailyPlaces;
+    else if(Array.isArray(node.placeList)) placesArr = node.placeList;
+    else if(Array.isArray(node.placeResponses)) placesArr = node.placeResponses;
+    else if(Array.isArray(node.placesResponse)) placesArr = node.placesResponse;
+    else if(Array.isArray(node.placeDtos)) placesArr = node.placeDtos;
+
+    if(placesArr && placesArr.length && typeof placesArr[0] === "object"){
+      const date =
+        node.schedule_date ||
+        node.scheduleDate ||
+        node.date ||
+        node.day ||
+        node.tripDate ||
+        node.travelDate ||
+        "";
+      schedules.push({ date: date, places: placesArr });
+    }
+
+    for(const k in node){
+      if(!Object.prototype.hasOwnProperty.call(node,k)) continue;
+      const v = node[k];
+      if(v && typeof v === "object") walk(v);
+    }
+  }
+
+  walk(raw);
+  return schedules;
+}
+
+async function loadChecklistFromServer(){
+  const input = document.getElementById("checkShareCodeInput");
+  if(!input) return;
+  const code = input.value.trim();
+  if(!code){
+    alert("공유 코드를 입력하세요.");
+    input.focus();
+    return;
+  }
+
+  try{
+    const res = await fetch(API_BASE + "/trips/" + code + "/for-edit");
+    const data = await safeJson(res);
+    if(!res.ok){
+      throw new Error(data.message || "체크리스트 데이터를 불러오지 못했습니다.");
+    }
+
+    const schedules = extractSchedulesFromResponse(data);
+    if(!schedules.length){
+      alert("체크리스트 항목을 찾을 수 없습니다.");
+      return;
+    }
+
+    const mapped = [];
+
+    schedules.forEach(function(sch){
+      const date = sch.date || "";
+      const places = sch.places || [];
+      if(!Array.isArray(places)) return;
+
+      places.forEach(function(place){
+        const name =
+          place.place_name ||
+          place.placeName ||
+          place.name ||
+          "";
+        const memo = extractPlaceMemo(place);
+
+        const parts = [];
+        if(date) parts.push(date);
+        if(name) parts.push(name);
+        if(memo) parts.push(memo);
+
+        let text = parts.join(" - ");
+        if(!text) text = "내용 없음";
+
+        mapped.push({
+          text: text,
+          placeName: name || "",
+          date: date || "",
+          memo: memo || "",
+          checked: place.is_completed === true || place.isCompleted === true,
+          placeId: place.id || place.placeId || place.place_id || null
+        });
+      });
+    });
+
+    localStorage.setItem("localChecklist", JSON.stringify(mapped));
+    loadChecklist();
+    alert("체크리스트가 불러와졌습니다.");
+  }catch(err){
+    console.error(err);
+    alert("체크리스트 불러오기 실패: " + err.message);
+  }
+}
+
+async function loadMyAlbum(){
+  const codeInput = document.getElementById("albumShareCodeInput");
+  if(!codeInput){
+    return;
+  }
+  const code = codeInput.value.trim();
+  const box = document.getElementById("albumBox");
+  box.innerHTML = "";
+  if(!code){
+    box.innerHTML = "<p style='color:gray;'></p>";
+    return;
+  }
+  try{
+    const res = await fetch(API_BASE + "/album/" + code);
+    const data = await safeJson(res);
+    const list = data.data || data || [];
+    if(!Array.isArray(list) || list.length === 0){
+      box.innerHTML = "<p>앨범에 등록된 이미지가 없습니다.</p>";
+      return;
+    }
+    list.forEach(function(img){
+      renderAlbumItemOwner(img, box);
+    });
+  }catch(err){
+    console.error(err);
+    box.innerHTML = "<p>앨범 로드 실패: " + err.message + "</p>";
+  }
+}
+
+function renderAlbumItemOwner(img, parent){
+  const card = document.createElement("div");
+  card.className = "album-card";
+
+  const header = document.createElement("div");
+  header.className = "album-meta";
+
+  const left = document.createElement("div");
+  left.style = "display:flex;flex-direction:column;gap:3px;";
+
+  const title = document.createElement("div");
+  title.style = "font-size:14px;font-weight:600;";
+  title.textContent = img.caption || img.title || "사진";
+
+  const dateSpan = document.createElement("span");
+  dateSpan.style = "font-size:11px;color:#9ca3af;";
+  if(img.createdAt || img.created_at){
+    const d = new Date(img.createdAt || img.created_at);
+    if(!isNaN(d.getTime())){
+      dateSpan.textContent = d.toLocaleString();
+    }
+  }
+
+  left.appendChild(title);
+  if(dateSpan.textContent) left.appendChild(dateSpan);
+
+  const right = document.createElement("div");
+  right.style = "display:flex;align-items:center;gap:6px;";
+
+  const delBtn = document.createElement("button");
+  delBtn.className = "small-btn";
+  delBtn.style.background = "#ff4b4b";
+  delBtn.type = "button";
+  delBtn.textContent = "삭제";
+  delBtn.onclick = function(){
+    deleteImage(img.id);
+  };
+
+  right.appendChild(delBtn);
+  header.appendChild(left);
+  header.appendChild(right);
+  card.appendChild(header);
+
+  if(img.url){
+    const image = document.createElement("img");
+    image.src = img.url;
+    image.alt = title.textContent;
+    card.appendChild(image);
+  }
+
+  parent.appendChild(card);
+}
+
+function renderAlbumItemView(img, parent){
+  const card = document.createElement("div");
+  card.className = "album-card";
+
+  const header = document.createElement("div");
+  header.className = "album-meta";
+
+  const left = document.createElement("div");
+  left.style = "display:flex;flex-direction:column;gap:3px;";
+
+  const title = document.createElement("div");
+  title.style = "font-size:14px;font-weight:600;";
+  title.textContent = img.caption || img.title || "사진";
+
+  const dateSpan = document.createElement("span");
+  dateSpan.style = "font-size:11px;color:#9ca3af;";
+  if(img.createdAt || img.created_at){
+    const d = new Date(img.createdAt || img.created_at);
+    if(!isNaN(d.getTime())){
+      dateSpan.textContent = d.toLocaleString();
+    }
+  }
+
+  left.appendChild(title);
+  if(dateSpan.textContent) left.appendChild(dateSpan);
+
+  header.appendChild(left);
+  card.appendChild(header);
+
+  if(img.url){
+    const image = document.createElement("img");
+    image.src = img.url;
+    image.alt = title.textContent;
+    card.appendChild(image);
+  }
+
+  parent.appendChild(card);
+}
+
+async function deleteImage(id){
+  try{
+    const res = await fetch(API_BASE + "/album/" + id, { method:"DELETE" });
+    const data = await safeJson(res);
+    if(!res.ok){
+      throw new Error(data.message || ("HTTP " + res.status + ": 이미지 삭제 실패"));
+    }
+    loadMyAlbum();
+  }catch(err){
+    console.error(err);
+    alert('이미지 삭제 실패: ' + err.message);
+  }
+}
+
+async function loadAllAlbums(){
+  const box = document.getElementById("allAlbumBox");
+  if(!box) return;
+  box.innerHTML = "";
+  try{
+    const res = await fetch(API_BASE + "/album");
+    const data = await safeJson(res);
+    const list = data.data || data || [];
+    if(!Array.isArray(list) || list.length === 0){
+      box.innerHTML = "<p>등록된 앨범이 없습니다.</p>";
+      return;
+    }
+    list.forEach(function(album){
+      const card = document.createElement("div");
+      card.className = "album-card";
+
+      const header = document.createElement("div");
+      header.className = "album-meta";
+
+      const left = document.createElement("div");
+      left.style = "display:flex;flex-direction:column;gap:3px;";
+
+      const titleDiv = document.createElement("div");
+      titleDiv.style = "font-size:14px;font-weight:600;";
+      titleDiv.textContent = album.title || album.name || album.tripName || "앨범";
+
+      const shareCode = album.shareCode || album.share_code || album.code || "";
+      const infoSpan = document.createElement("span");
+      infoSpan.style = "font-size:11px;color:#9ca3af;";
+
+      if(shareCode){
+        infoSpan.textContent = "공유 코드: " + shareCode;
+      }
+
+      left.appendChild(titleDiv);
+      if(infoSpan.textContent) left.appendChild(infoSpan);
+
+      const right = document.createElement("div");
+      right.style = "display:flex;align-items:center;gap:6px;";
+
+      const openBtn = document.createElement("button");
+      openBtn.className = "small-btn";
+      openBtn.type = "button";
+      openBtn.textContent = "열람";
+      openBtn.onclick = function(){
+        openAlbumFromList(shareCode, titleDiv.textContent);
+      };
+
+      right.appendChild(openBtn);
+      header.appendChild(left);
+      header.appendChild(right);
+      card.appendChild(header);
+
+      if(album.thumbnailUrl || album.coverUrl){
+        const thumb = document.createElement("img");
+        thumb.src = album.thumbnailUrl || album.coverUrl;
+        thumb.alt = titleDiv.textContent;
+        card.appendChild(thumb);
+      }
+
+      box.appendChild(card);
+    });
+  }catch(err){
+    console.error(err);
+    box.innerHTML = "<p>전체 앨범을 불러오지 못했습니다: " + err.message + "</p>";
+  }
+}
+
+function openAlbumFromList(shareCode, title){
+  if(!shareCode) return;
+  const viewTitle = document.getElementById("albumViewTitle");
+  const viewCode = document.getElementById("albumViewShareCode");
+  if(viewTitle) viewTitle.textContent = title || "앨범";
+  if(viewCode) viewCode.textContent = shareCode;
+  showPage("albumViewPage");
+  loadAlbumDetailByCode(shareCode);
+}
+
+function openAlbumFromShareInput(){
+  const input = document.getElementById("albumShareCodeInput");
+  if(!input) return;
+  const code = input.value.trim();
+  if(!code){
+    alert("공유코드를 입력하세요.");
+    input.focus();
+    return;
+  }
+  const viewTitle = document.getElementById("albumViewTitle");
+  const viewCode = document.getElementById("albumViewShareCode");
+  if(viewTitle) viewTitle.textContent = "내 앨범";
+  if(viewCode) viewCode.textContent = code;
+  showPage("albumViewPage");
+  loadAlbumDetailByCode(code);
+}
+
+async function loadAlbumDetailByCode(code){
+  const box = document.getElementById("albumViewBox");
+  if(!box) return;
+  box.innerHTML = "";
+  try{
+    const res = await fetch(API_BASE + "/album/" + code);
+    const data = await safeJson(res);
+    const list = data.data || data || [];
+    if(!Array.isArray(list) || list.length === 0){
+      box.innerHTML = "<p>앨범에 등록된 이미지가 없습니다.</p>";
+      return;
+    }
+    list.forEach(function(img){
+      renderAlbumItemView(img, box);
+    });
+  }catch(err){
+    console.error(err);
+    box.innerHTML = "<p>앨범을 불러오지 못했습니다: " + err.message + "</p>";
+  }
+}
+
+let map, userMarker, infoWindow, placesService;
+
+function initMap(){
+  const center = { lat:37.5665, lng:126.9780 };
+  map = new google.maps.Map(document.getElementById("map"), {
+    zoom:13,
+    center:center
+  });
+  infoWindow = new google.maps.InfoWindow();
+  placesService = new google.maps.places.PlacesService(map);
+  loadUserLocation();
+  map.addListener("click", function(e){ findNearbyMart(e.latLng); });
+}
+
+function loadUserLocation(){
+  if(!map){
+    alert("지도가 아직 준비되지 않았습니다.");
+    return;
+  }
+  if(!navigator.geolocation){
+    alert("브라우저가 위치 정보를 지원하지 않습니다.");
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    function(pos){
+      const userPos = {
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude
+      };
+      map.setCenter(userPos);
+      if(userMarker) userMarker.setMap(null);
+      userMarker = new google.maps.Marker({
+        position:userPos,
+        map:map,
+        icon:{
+          url:"https://maps.google.com/mapfiles/kml/paddle/blu-circle.png",
+          scaledSize:new google.maps.Size(40,40)
+        }
+      });
+      infoWindow.setContent("현재 위치");
+      infoWindow.open(map, userMarker);
+    },
+    function(err){
+      console.error("위치 에러:", err);
+      alert("위치 정보를 가져오지 못했습니다.");
+    }
+  );
+}
+
+function findNearbyMart(location){
+  if(!placesService){
+    alert("지도 서비스가 준비되지 않았습니다.");
+    return;
+  }
+  placesService.nearbySearch({
+    location:location,
+    radius:400,
+    type:["grocery_or_supermarket"]
+  }, function(results, status){
+    if(status !== "OK" || !results.length){
+      alert("근처에 마트가 없습니다.");
+      return;
+    }
+    const shop = results[0];
+    const marker = new google.maps.Marker({
+      position: shop.geometry.location,
+      map: map
+    });
+    showPlaceInfo(shop, marker);
+  });
+}
+
+function showPlaceInfo(place, marker){
+  placesService.getDetails({
+    placeId: place.place_id
+  }, function(detail, status){
+    if(status !== "OK") return;
+    const html = `
+      <h3>${detail.name}</h3>
+      <p>${detail.formatted_address || "주소 없음"}</p>
+      <p>별점 ${detail.rating || "정보없음"}</p>
+      <p>전화번호 ${detail.formatted_phone_number || "없음"}</p>
+    `;
+    infoWindow.setContent(html);
+    infoWindow.open(map, marker);
+  });
+}
+
+async function uploadAlbumImages(){
+  alert("이미지 업로드 기능은 서버 연결 후 사용할 수 있습니다.");
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+  renderBudget();
+
+  const saved = localStorage.getItem("plan_share");
+  if(saved){
+    shareCodeEl.textContent = saved;
+
+    const manageInputSaved = document.getElementById('manageShareCode');
+    if(manageInputSaved) manageInputSaved.value = saved;
+    const checkInput = document.getElementById('checkShareCodeInput');
+    if(checkInput) checkInput.value = saved;
+    const albumInput = document.getElementById('albumShareCodeInput');
+    if(albumInput) albumInput.value = saved;
+  }
+
+  const locBtn = document.getElementById("myLocationBtn");
+  if(locBtn) locBtn.onclick = function(){ loadUserLocation(); };
+
+  const manageInput = document.getElementById('manageShareCode');
+  if(manageInput){
+    manageInput.addEventListener('input', function(){
+      isEditMode = false;
+      editShareCode = null;
+      const editBox = document.getElementById('editTripBox');
+      if(editBox){
+        editBox.style.display = 'none';
+        const listEl = document.getElementById('editSchedulesList');
+        if(listEl) listEl.innerHTML = "";
+        editScheduleIndex = 0;
+      }
+      const btn = document.querySelector('button[onclick="updateTrip()"]');
+      if(btn) btn.textContent = "여행 수정";
+    });
+  }
+
+  addSchedule();
+});
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCly6IYPQVnJYHwxuy0BwXwMdCjm_c0Oc&libraries=places&callback=initMap" async defer></script>
+
+</body>
+</html>
