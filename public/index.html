@@ -397,13 +397,13 @@ button:hover{
 
   <div class="input-group">
     <label>여행 이름</label>
-    <input type="text" id="tripName" placeholder="여행 이름을 입력하세요">
+    <input type="text" id="tripName" value="제주도 가족 여행" placeholder="여행 이름을 입력하세요">
 
     <label>시작 날짜</label>
-    <input type="date" id="startDate" >
+    <input type="date" id="startDate" value="2025-12-01">
 
     <label>종료 날짜</label>
-    <input type="date" id="endDate" >
+    <input type="date" id="endDate" value="2025-12-05">
 
     <h3 style="margin-top:18px;">일정 추가</h3>
     <div id="schedulesList"></div>
@@ -645,7 +645,7 @@ function addSchedule() {
     <button class="remove-btn" type="button" onclick="removeSchedule(${index})">삭제</button>
     <h3>일정 ${index + 1}</h3>
     <label>날짜</label>
-    <input type="date" id="schedule-date-${index}">
+    <input type="date" id="schedule-date-${index}" value="2025-12-01">
     <h4 style="margin-top:12px;">장소 목록</h4>
     <div id="places-${index}"></div>
     <button class="add-btn" type="button" onclick="addPlace(${index})">+ 장소 추가</button>
@@ -661,7 +661,8 @@ function addScheduleWithData(scheduleData) {
     scheduleData.schedule_date ||
     scheduleData.scheduleDate ||
     scheduleData.date ||
-    document.getElementById('startDate').value
+    document.getElementById('startDate').value ||
+    "2025-12-01";
 
   const scheduleDiv = document.createElement('div');
   scheduleDiv.className = 'schedule-item';
@@ -670,7 +671,7 @@ function addScheduleWithData(scheduleData) {
     <button class="remove-btn" type="button" onclick="removeSchedule(${index})">삭제</button>
     <h3>일정 ${index + 1}</h3>
     <label>날짜</label>
-    <input type="date" id="schedule-date-${index}" >
+    <input type="date" id="schedule-date-${index}" value="${dateValue}">
     <h4 style="margin-top:12px;">장소 목록</h4>
     <div id="places-${index}"></div>
     <button class="add-btn" type="button" onclick="addPlace(${index})">+ 장소 추가</button>
@@ -716,7 +717,7 @@ function addPlace(scheduleIndex) {
     <div class="inline-inputs">
       <div>
         <label>방문 시간</label>
-        <input type="time" class="place-time">
+        <input type="time" class="place-time" value="10:00">
       </div>
       <div>
         <label>순서</label>
@@ -750,29 +751,29 @@ function addPlaceWithData(scheduleIndex, placeData){
   const placeDiv = document.createElement('div');
   placeDiv.className = 'place-item';
   placeDiv.innerHTML = `
-    <button class="remove-btn" type="button" onclick="this.parentElement.remove()"></button>
+    <button class="remove-btn" type="button" onclick="this.parentElement.remove()">×</button>
     <label>장소 이름</label>
-    <input type="text" class="place-name" placeholder="예: 제주 국제공항" >
+    <input type="text" class="place-name" placeholder="예: 제주 국제공항" value="${name}">
     <label>주소</label>
-    <input type="text" class="place-address" placeholder="예: 제주 제주시 공항로 2">
+    <input type="text" class="place-address" placeholder="예: 제주 제주시 공항로 2" value="${address}">
     <div class="inline-inputs">
       <div>
         <label>위도</label>
-        <input type="number" step="0.000001" class="place-lat" placeholder="33.5113"">
+        <input type="number" step="0.000001" class="place-lat" placeholder="33.5113" value="${lat}">
       </div>
       <div>
         <label>경도</label>
-        <input type="number" step="0.000001" class="place-lng" placeholder="126.4927">
+        <input type="number" step="0.000001" class="place-lng" placeholder="126.4927" value="${lng}">
       </div>
     </div>
     <div class="inline-inputs">
       <div>
         <label>방문 시간</label>
-        <input type="time" class="place-time">
+        <input type="time" class="place-time" value="${time}">
       </div>
       <div>
         <label>순서</label>
-        <input type="number" class="place-order" value="${placeIndex + 1}">
+        <input type="number" class="place-order" value="${order}">
       </div>
     </div>
     <label>완료 여부</label>
@@ -851,8 +852,9 @@ function addEditSchedule(scheduleData) {
       ? (scheduleData.schedule_date ||
          scheduleData.scheduleDate ||
          scheduleData.date ||
-         document.getElementById('editStartDate').value)
-      : (document.getElementById('editStartDate').value);
+         document.getElementById('editStartDate').value ||
+         "2025-12-01")
+      : (document.getElementById('editStartDate').value || "2025-12-01");
 
   const scheduleDiv = document.createElement('div');
   scheduleDiv.className = 'schedule-item';
@@ -861,7 +863,7 @@ function addEditSchedule(scheduleData) {
     <button class="remove-btn" type="button" onclick="removeEditSchedule(${index})">삭제</button>
     <h3>일정 ${index + 1}</h3>
     <label>날짜</label>
-    <input type="date" id="edit-schedule-date-${index}">
+    <input type="date" id="edit-schedule-date-${index}" value="${dateValue}">
     <h4 style="margin-top:12px;">장소 목록</h4>
     <div id="edit-places-${index}"></div>
     <button class="add-btn" type="button" onclick="addEditPlace(${index})">+ 장소 추가</button>
@@ -907,7 +909,7 @@ function addEditPlace(scheduleIndex){
     <div class="inline-inputs">
       <div>
         <label>방문 시간</label>
-        <input type="time" class="place-time">
+        <input type="time" class="place-time" value="10:00">
       </div>
       <div>
         <label>순서</label>
@@ -943,27 +945,27 @@ function addEditPlaceWithData(scheduleIndex, placeData){
   placeDiv.innerHTML = `
     <button class="remove-btn" type="button" onclick="this.parentElement.remove()">×</button>
     <label>장소 이름</label>
-    <input type="text" class="place-name" placeholder="예: 제주 국제공항">
+    <input type="text" class="place-name" placeholder="예: 제주 국제공항" value="${name}">
     <label>주소</label>
-    <input type="text" class="place-address" placeholder="예: 제주 제주시 공항로 2">
+    <input type="text" class="place-address" placeholder="예: 제주 제주시 공항로 2" value="${address}">
     <div class="inline-inputs">
       <div>
         <label>위도</label>
-        <input type="number" step="0.000001" class="place-lat" placeholder="33.5113">
+        <input type="number" step="0.000001" class="place-lat" placeholder="33.5113" value="${lat}">
       </div>
       <div>
         <label>경도</label>
-        <input type="number" step="0.000001" class="place-lng" placeholder="126.4927">
+        <input type="number" step="0.000001" class="place-lng" placeholder="126.4927" value="${lng}">
       </div>
     </div>
     <div class="inline-inputs">
       <div>
         <label>방문 시간</label>
-        <input type="time" class="place-time">
+        <input type="time" class="place-time" value="${time}">
       </div>
       <div>
         <label>순서</label>
-        <input type="number" class="place-order" value="${placeIndex + 1}">
+        <input type="number" class="place-order" value="${order}">
       </div>
     </div>
     <label>완료 여부</label>
@@ -1085,7 +1087,7 @@ async function createTrip() {
 
       alert('여행이 생성되었습니다. 공유코드: ' + code);
     } else {
-      alert('여행은 생성됐지만 응답에서 공유코드를 찾지 못했습니다.');
+      alert('여행은 생성됐지만  공유코드를 생성  못했습니다.');
     }
   } catch(err){
     console.error(err);
@@ -1562,6 +1564,46 @@ async function loadChecklistFromServer(){
   }
 }
 
+/* 이미지 URL을 여러 키에서 자동으로 찾아서 절대 URL로 만들어주는 함수 */
+function resolveImageUrl(obj){
+  if(!obj || typeof obj !== "object") return null;
+
+  const candidateKeys = [
+    "url","imageUrl","imageURL","fileUrl","fileURL",
+    "path","filePath","image_path","imagePath",
+    "storedFileName","storedFilename","filename","fileName"
+  ];
+
+  for(const key of candidateKeys){
+    if(obj[key] && typeof obj[key] === "string"){
+      return normalizeImageUrl(obj[key]);
+    }
+  }
+
+  for(const k in obj){
+    if(!Object.prototype.hasOwnProperty.call(obj,k)) continue;
+    const v = obj[k];
+    if(typeof v === "string"){
+      const trimmed = v.trim();
+      if(/^https?:\/\//i.test(trimmed)) return trimmed;
+      if(/\.(png|jpe?g|gif|webp|svg)$/i.test(trimmed)){
+        return normalizeImageUrl(trimmed);
+      }
+    }
+  }
+  return null;
+}
+
+function normalizeImageUrl(u){
+  if(!u) return null;
+  const trimmed = u.trim();
+  if(/^https?:\/\//i.test(trimmed)) return trimmed;
+  if(trimmed.startsWith("/")){
+    return BASE_URL + trimmed;
+  }
+  return BASE_URL + "/" + trimmed;
+}
+
 async function loadMyAlbum(){
   const codeInput = document.getElementById("albumShareCodeInput");
   if(!codeInput){
@@ -1634,9 +1676,10 @@ function renderAlbumItemOwner(img, parent){
   header.appendChild(right);
   card.appendChild(header);
 
-  if(img.url){
+  const imageUrl = resolveImageUrl(img);
+  if(imageUrl){
     const image = document.createElement("img");
-    image.src = img.url;
+    image.src = imageUrl;
     image.alt = title.textContent;
     card.appendChild(image);
   }
@@ -1673,9 +1716,10 @@ function renderAlbumItemView(img, parent){
   header.appendChild(left);
   card.appendChild(header);
 
-  if(img.url){
+  const imageUrl = resolveImageUrl(img);
+  if(imageUrl){
     const image = document.createElement("img");
-    image.src = img.url;
+    image.src = imageUrl;
     image.alt = title.textContent;
     card.appendChild(image);
   }
@@ -1750,9 +1794,10 @@ async function loadAllAlbums(){
       header.appendChild(right);
       card.appendChild(header);
 
-      if(album.thumbnailUrl || album.coverUrl){
+      const thumbUrl = resolveImageUrl(album);
+      if(thumbUrl){
         const thumb = document.createElement("img");
-        thumb.src = album.thumbnailUrl || album.coverUrl;
+        thumb.src = thumbUrl;
         thumb.alt = titleDiv.textContent;
         card.appendChild(thumb);
       }
@@ -1902,7 +1947,43 @@ function showPlaceInfo(place, marker){
 }
 
 async function uploadAlbumImages(){
-  alert("이미지 업로드 기능은 서버 연결 후 사용할 수 있습니다.");
+  const code = document.getElementById("albumShareCodeInput").value.trim();
+  const files = document.getElementById("albumUploadInput").files;
+
+  if(!code){
+    alert("공유 코드를 입력하세요.");
+    return;
+  }
+
+  if(files.length === 0){
+    alert("업로드할 이미지를 선택하세요.");
+    return;
+  }
+
+  const formData = new FormData();
+  for(const f of files){
+    formData.append("albumImages", f);
+  }
+
+  try{
+    const res = await fetch(API_BASE + "/album/" + code, {
+      method:"POST",
+      body: formData
+    });
+
+    const data = await res.json();
+
+    if(!res.ok){
+      alert("업로드 실패: " + (data.message || "서버 오류"));
+      return;
+    }
+
+    alert("이미지 업로드 완료!");
+    loadMyAlbum();
+
+  }catch(err){
+    alert("업로드 중 오류: " + err.message);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", function(){
