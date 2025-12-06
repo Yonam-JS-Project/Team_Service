@@ -302,6 +302,7 @@ button:hover{
   width:100%;
   border-radius:12px;
   margin-top:8px;
+  display: block; /* 이미지 하단 여백 제거 */
 }
 .album-meta{
   display:flex;
@@ -790,7 +791,6 @@ function addPlaceWithData(scheduleIndex, placeData){
 function collectScheduleData() {
   const schedules = [];
   const scheduleItems = document.querySelectorAll('#schedulesList .schedule-item');
-
   scheduleItems.forEach(function(scheduleItem){
     const dateInput = scheduleItem.querySelector('input[type="date"]');
     let date = dateInput ? dateInput.value : "";
@@ -814,7 +814,6 @@ function collectScheduleData() {
       const time   = placeItem.querySelector('.place-time').value;
       const order  = placeItem.querySelector('.place-order').value;
       const completed = placeItem.querySelector('.place-completed').value === 'true';
-
       const hasContent =
         name || address || memo || latStr || lngStr || (time && time !== "00:00");
 
@@ -855,7 +854,6 @@ function addEditSchedule(scheduleData) {
          document.getElementById('editStartDate').value ||
          "2025-12-01")
       : (document.getElementById('editStartDate').value || "2025-12-01");
-
   const scheduleDiv = document.createElement('div');
   scheduleDiv.className = 'schedule-item';
   scheduleDiv.id = "edit-schedule-" + index;
@@ -982,7 +980,6 @@ function addEditPlaceWithData(scheduleIndex, placeData){
 function collectEditScheduleData() {
   const schedules = [];
   const scheduleItems = document.querySelectorAll('#editSchedulesList .schedule-item');
-
   scheduleItems.forEach(function(scheduleItem){
     const dateInput = scheduleItem.querySelector('input[type="date"]');
     let date = dateInput ? dateInput.value : "";
@@ -1006,7 +1003,6 @@ function collectEditScheduleData() {
       const time   = placeItem.querySelector('.place-time').value;
       const order  = placeItem.querySelector('.place-order').value;
       const completed = placeItem.querySelector('.place-completed').value === 'true';
-
       const hasContent =
         name || address || memo || latStr || lngStr || (time && time !== "00:00");
 
@@ -1041,7 +1037,6 @@ async function createTrip() {
     const tripName  = document.getElementById('tripName').value;
     const startDate = document.getElementById('startDate').value;
     const endDate   = document.getElementById('endDate').value;
-
     if(!tripName || !startDate || !endDate){
       alert("여행 이름, 시작 날짜, 종료 날짜를 모두 입력하세요.");
       return;
@@ -1058,7 +1053,6 @@ async function createTrip() {
       headers:{ 'Content-Type':'application/json' },
       body: JSON.stringify({ tripName, startDate, endDate, dailySchedules })
     });
-
     const data = await safeJson(res);
 
     if(!res.ok){
@@ -1070,7 +1064,6 @@ async function createTrip() {
     if(code){
       shareCodeEl.textContent = code;
       localStorage.setItem("plan_share", code);
-
       const manageInput = document.getElementById('manageShareCode');
       if(manageInput) manageInput.value = code;
       const checkInput = document.getElementById('checkShareCodeInput');
@@ -1134,7 +1127,6 @@ async function updateTrip(){
       const editTripName  = document.getElementById('editTripName');
       const editStartDate = document.getElementById('editStartDate');
       const editEndDate   = document.getElementById('editEndDate');
-
       if(editTripName) editTripName.value = tripNameVal;
       if(editStartDate) editStartDate.value = startDateVal || "";
       if(editEndDate) editEndDate.value = endDateVal || "";
@@ -1158,7 +1150,6 @@ async function updateTrip(){
       isEditMode = true;
       editShareCode = shareCode;
       if(btn) btn.textContent = "수정 저장";
-
     }catch(err){
       console.error(err);
       alert("여행 정보를 불러오지 못했습니다: " + err.message);
@@ -1169,7 +1160,6 @@ async function updateTrip(){
   const tripName  = document.getElementById('editTripName').value;
   const startDate = document.getElementById('editStartDate').value;
   const endDate   = document.getElementById('editEndDate').value;
-
   if(!tripName || !startDate || !endDate){
     alert('여행 이름, 시작 날짜, 종료 날짜를 모두 입력하세요.');
     return;
@@ -1197,7 +1187,6 @@ async function updateTrip(){
       '수정된 내용:\n- 여행명: ' + tripName +
       '\n- 기간: ' + startDate + ' ~ ' + endDate
     );
-
     isEditMode = false;
     editShareCode = null;
     if(editBox){
@@ -1207,7 +1196,6 @@ async function updateTrip(){
       editScheduleIndex = 0;
     }
     if(btn) btn.textContent = "여행 수정";
-
   }catch(err){
     console.error(err);
     alert('에러 발생: ' + err.message);
@@ -1223,7 +1211,6 @@ async function deleteTrip(){
     return;
   }
   if(!confirm("공유 코드 " + shareCode + " 여행을 삭제하시겠습니까?")) return;
-
   try{
     const res = await fetch(API_BASE + "/trips/" + shareCode, { method:"DELETE" });
     const data = await safeJson(res);
@@ -1236,7 +1223,6 @@ async function deleteTrip(){
     localStorage.removeItem("plan_share");
     isEditMode = false;
     editShareCode = null;
-
     const tripNameInput  = document.getElementById('tripName');
     const startDateInput = document.getElementById('startDate');
     const endDateInput   = document.getElementById('endDate');
@@ -1272,7 +1258,6 @@ function renderBudget(){
   const budgetList = document.getElementById("budgetList");
   budgetList.innerHTML = "";
   let total = 0;
-
   list.forEach(function(item, i){
     total += Number(item.cost);
     const row = document.createElement("div");
@@ -1293,7 +1278,6 @@ function renderBudget(){
     row.appendChild(del);
     budgetList.appendChild(row);
   });
-
   document.getElementById("budgetTotal").textContent =
     total.toLocaleString() + " 원";
 }
@@ -1313,7 +1297,6 @@ document.getElementById("addBudgetBtn").onclick = function(){
 function loadChecklist(){
   const box = document.getElementById("checkListBox");
   box.innerHTML = "";
-
   const list = JSON.parse(localStorage.getItem("localChecklist") || "[]");
 
   const inputRow = document.createElement("div");
@@ -1346,7 +1329,6 @@ function loadChecklist(){
   inputRow.appendChild(input);
   inputRow.appendChild(addBtn);
   box.appendChild(inputRow);
-
   if (list.length === 0) {
     const empty = document.createElement("p");
     empty.textContent = "등록된 항목이 없습니다.";
@@ -1363,7 +1345,6 @@ function loadChecklist(){
     if(!grouped[key]) grouped[key] = [];
     grouped[key].push({ item: item, index: i });
   });
-
   Object.keys(grouped).forEach(function(placeName){
     const groupBox = document.createElement("div");
     groupBox.style =
@@ -1435,7 +1416,6 @@ function loadChecklist(){
 
       left.appendChild(chk);
       left.appendChild(span);
-
       const del = document.createElement("button");
       del.textContent = "삭제";
       del.style =
@@ -1554,7 +1534,6 @@ async function loadChecklistFromServer(){
         });
       });
     });
-
     localStorage.setItem("localChecklist", JSON.stringify(mapped));
     loadChecklist();
     alert("체크리스트가 불러와졌습니다.");
@@ -1564,28 +1543,33 @@ async function loadChecklistFromServer(){
   }
 }
 
-/* 이미지 URL을 여러 키에서 자동으로 찾아서 절대 URL로 만들어주는 함수 */
+/* 이미지 주소  자동 찾기 */
 function resolveImageUrl(obj){
   if(!obj || typeof obj !== "object") return null;
-
   const candidateKeys = [
     "url","imageUrl","imageURL","fileUrl","fileURL",
     "path","filePath","image_path","imagePath",
-    "storedFileName","storedFilename","filename","fileName"
+    "storedFileName","storedFilename","filename","fileName",
+    "storeFileName", "saveFileName", "saveFilename",
+    "originalFileName", "originalFilename", "uuid", "photo_url"
   ];
-
   for(const key of candidateKeys){
     if(obj[key] && typeof obj[key] === "string"){
       return normalizeImageUrl(obj[key]);
     }
   }
 
+  // 키값 매칭 실패 시 값 자체를 검사
   for(const k in obj){
     if(!Object.prototype.hasOwnProperty.call(obj,k)) continue;
     const v = obj[k];
     if(typeof v === "string"){
       const trimmed = v.trim();
-      if(/^https?:\/\//i.test(trimmed)) return trimmed;
+      if(/^https?:\/\//i.test(trimmed)) return normalizeImageUrl(trimmed);
+      const lowerKey = k.toLowerCase();
+      if(lowerKey.includes("path") || lowerKey.includes("url") || lowerKey.includes("file")){
+         return normalizeImageUrl(trimmed);
+      }
       if(/\.(png|jpe?g|gif|webp|svg)$/i.test(trimmed)){
         return normalizeImageUrl(trimmed);
       }
@@ -1594,14 +1578,40 @@ function resolveImageUrl(obj){
   return null;
 }
 
+
+function resolvePhotoId(obj){
+  if (!obj || typeof obj !== "object") return null;
+  //  많이 사용하는 snake_case를 먼저 체크
+  if (obj.photo_id) return obj.photo_id;
+  // 표준 아디
+  if (obj.id) return obj.id;
+  if (obj.photoId) return obj.photoId;
+  if (obj.imageId) return obj.imageId;
+  return null;
+}
+
 function normalizeImageUrl(u){
   if(!u) return null;
-  const trimmed = u.trim();
-  if(/^https?:\/\//i.test(trimmed)) return trimmed;
-  if(trimmed.startsWith("/")){
-    return BASE_URL + trimmed;
+  let trimmed = u.trim();
+
+  //  IP 주소 158.180.71.25가 들어있으면 교체
+  // 이렇게 해야 HTTPS 보안연결이 정상 작동
+  if(trimmed.includes("158.180.71.25")){   //이 부분 yonam.du.org로 바꾸면 사진 안됨
+      trimmed = trimmed.replace("158.180.71.25", "yonam.duckdns.org");
   }
-  return BASE_URL + "/" + trimmed;
+
+  // https:// 로 강제 교체  해야함 
+  if(trimmed.startsWith("http://")){
+      trimmed = trimmed.replace("http://", "https://");
+  }
+
+  //  만약 도메인이 없고 경로만 있다면 Base URL 붙이기
+  if(!/^https?:\/\//i.test(trimmed)){
+      if(trimmed.startsWith("/")) return BASE_URL + trimmed;
+      return BASE_URL + "/" + trimmed;
+  }
+
+  return trimmed;
 }
 
 async function loadMyAlbum(){
@@ -1613,7 +1623,7 @@ async function loadMyAlbum(){
   const box = document.getElementById("albumBox");
   box.innerHTML = "";
   if(!code){
-    box.innerHTML = "<p style='color:gray;'></p>";
+    box.innerHTML = "<p style='color:gray;'>앨범의 공유 코드를 입력하세요.</p>";
     return;
   }
   try{
@@ -1639,7 +1649,6 @@ function renderAlbumItemOwner(img, parent){
 
   const header = document.createElement("div");
   header.className = "album-meta";
-
   const left = document.createElement("div");
   left.style = "display:flex;flex-direction:column;gap:3px;";
 
@@ -1662,14 +1671,27 @@ function renderAlbumItemOwner(img, parent){
   const right = document.createElement("div");
   right.style = "display:flex;align-items:center;gap:6px;";
 
+  const photoId = resolvePhotoId(img); // 아이디 찾는 로직 적용
+
   const delBtn = document.createElement("button");
   delBtn.className = "small-btn";
-  delBtn.style.background = "#ff4b4b";
   delBtn.type = "button";
-  delBtn.textContent = "삭제";
-  delBtn.onclick = function(){
-    deleteImage(img.id);
-  };
+
+  if(photoId){
+      delBtn.style.background = "#ff4b4b";
+      delBtn.textContent = "삭제";
+      delBtn.onclick = function(){
+          deleteImage(photoId); // 찾은 아이디ㅣ 전달
+      };
+  } else {
+      delBtn.textContent = "ID 오류";
+      delBtn.style.background = "#aaa";
+      delBtn.disabled = true;
+      const infoSpan = document.createElement("span");
+      infoSpan.style = "font-size:10px; color:red;";
+      infoSpan.textContent = "ID 필드를 찾을 수 없음";
+      left.appendChild(infoSpan);
+  }
 
   right.appendChild(delBtn);
   header.appendChild(left);
@@ -1681,7 +1703,35 @@ function renderAlbumItemOwner(img, parent){
     const image = document.createElement("img");
     image.src = imageUrl;
     image.alt = title.textContent;
+    
+    // 에러 핸들링 계속 유지하여 문제 발생 시 확인 가능하도록 함
+    image.onerror = function() {
+       this.style.display = 'none';
+       const err = document.createElement('div');
+       err.style.color = "red";
+       err.style.fontSize = "12px";
+       err.style.padding = "10px";
+       err.style.wordBreak = "break-all"; 
+
+       err.innerHTML = `
+         <div>이미지를 불러올 수 없습니다.</div>
+         <div style="color:#333; margin-top:5px; font-weight:bold;">시도한 URL:</div>
+         <div style="color:#555;">${this.src}</div>
+         <div style="color:#333; margin-top:5px; font-weight:bold;">원본 데이터:</div>
+         <div style="color:#777; font-size:10px;">${JSON.stringify(img)}</div>
+       `;
+       card.appendChild(err);
+    };
+
     card.appendChild(image);
+  } else {
+     const err = document.createElement('div');
+     err.textContent = "이미지 경로 없음 (JSON 데이터를 확인하세요)";
+     err.style.color = "gray";
+     err.style.fontSize = "12px";
+     err.style.padding = "10px";
+     err.innerHTML += `<div style="font-size:10px;color:#ccc;margin-top:4px;">${JSON.stringify(img)}</div>`;
+     card.appendChild(err);
   }
 
   parent.appendChild(card);
@@ -1693,7 +1743,6 @@ function renderAlbumItemView(img, parent){
 
   const header = document.createElement("div");
   header.className = "album-meta";
-
   const left = document.createElement("div");
   left.style = "display:flex;flex-direction:column;gap:3px;";
 
@@ -1715,26 +1764,50 @@ function renderAlbumItemView(img, parent){
 
   header.appendChild(left);
   card.appendChild(header);
-
   const imageUrl = resolveImageUrl(img);
   if(imageUrl){
     const image = document.createElement("img");
     image.src = imageUrl;
     image.alt = title.textContent;
+
+    image.onerror = function() {
+       this.style.display = 'none';
+       const err = document.createElement('div');
+       err.style.color = "red";
+       err.style.fontSize = "12px";
+       err.style.padding = "10px";
+       err.style.wordBreak = "break-all";
+
+       err.innerHTML = `
+         <div>이미지를 불러올 수 없습니다.</div>
+         <div style="color:#333; margin-top:5px; font-weight:bold;">시도한 URL:</div>
+         <div style="color:#555;">${this.src}</div>
+         <div style="color:#333; margin-top:5px; font-weight:bold;">원본 데이터:</div>
+         <div style="color:#777; font-size:10px;">${JSON.stringify(img)}</div>
+       `;
+       card.appendChild(err);
+    };
+
     card.appendChild(image);
   }
-
   parent.appendChild(card);
 }
 
-async function deleteImage(id){
+async function deleteImage(photoId){
+  if(!photoId){
+    alert('삭제할 사진을 찾을 수 없습니다.');
+    return;
+  }
+  if(!confirm("이 사진을 정말로 삭제하시겠습니까? ")) return;
+
   try{
-    const res = await fetch(API_BASE + "/album/" + id, { method:"DELETE" });
+    const res = await fetch(API_BASE + "/album/" + photoId, { method:"DELETE" });
     const data = await safeJson(res);
     if(!res.ok){
       throw new Error(data.message || ("HTTP " + res.status + ": 이미지 삭제 실패"));
     }
     loadMyAlbum();
+    alert('사진이 삭제되었습니다.');
   }catch(err){
     console.error(err);
     alert('이미지 삭제 실패: ' + err.message);
@@ -1780,7 +1853,6 @@ async function loadAllAlbums(){
 
       const right = document.createElement("div");
       right.style = "display:flex;align-items:center;gap:6px;";
-
       const openBtn = document.createElement("button");
       openBtn.className = "small-btn";
       openBtn.type = "button";
@@ -1793,7 +1865,6 @@ async function loadAllAlbums(){
       header.appendChild(left);
       header.appendChild(right);
       card.appendChild(header);
-
       const thumbUrl = resolveImageUrl(album);
       if(thumbUrl){
         const thumb = document.createElement("img");
@@ -1859,7 +1930,6 @@ async function loadAlbumDetailByCode(code){
 }
 
 let map, userMarker, infoWindow, placesService;
-
 function initMap(){
   const center = { lat:37.5665, lng:126.9780 };
   map = new google.maps.Map(document.getElementById("map"), {
@@ -1970,7 +2040,6 @@ async function uploadAlbumImages(){
       method:"POST",
       body: formData
     });
-
     const data = await res.json();
 
     if(!res.ok){
